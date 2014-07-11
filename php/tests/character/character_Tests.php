@@ -1,6 +1,6 @@
 <?php
-include ("../main/character.php");
-include ("../main/alignment.php");
+include_once ("../main/character.php");
+include_once ("../main/alignment.php");
 
 class character_Tests implements testInterface
 {
@@ -18,6 +18,10 @@ class character_Tests implements testInterface
 
     public function itHasAlignmentProperty(){
         assert(property_exists("character","alignment"));
+    }
+
+    public function itHasExperiencePoints(){
+        assert(property_exists("character","experience"));
     }
 
     public function alignmentPropertySetIgnoresBadValue(){
@@ -54,5 +58,30 @@ class character_Tests implements testInterface
 
         assert(property_exists($c,"hitPoints"));
         assert($c->hitPoints == 5);
+    }
+
+    public function itIsAliveIfHitPointsOverZero(){
+        $c = new character();
+        $c->hitPoints=1;
+        assert($c->isAlive === true);
+    }
+
+    public function itIsNotAliveIfHitPointsZeroOrLess(){
+        $c = new character();
+        $c->takeDamage($c->hitPoints);
+        assert($c->isAlive === false);
+    }
+
+    public function ItDefaultsToLevel1AtZeroXP()
+    {
+        $c = new character();
+        assert($c->level == 1);
+    }
+
+    public function ItHasLevelForEachThousandXP()
+    {
+        $c = new character();
+        $c->experience=12345;
+        assert($c->level == 13);
     }
 }
