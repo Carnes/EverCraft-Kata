@@ -61,6 +61,45 @@ class character
             $this->class[] = new $classType();
     }
 
+    private function getModifiers()
+    {
+        $modifiers = array();
+        $modifiers[] = array("target"=>"attack damage per level","method"=>function($character){return ceil($character->level/2);});
+
+        foreach($this->class as $class)
+        {
+            $modifiers = array_merge($modifiers,$class->getModifiers());
+        }
+
+        return $modifiers;
+    }
+
+    private function getAttackDamagePerLevel()
+    {
+        $bestResult = 0;
+        foreach ($this->getModifiers() as $modifier)
+        {
+            if($modifier["target"]== "attack damage per level")
+            {
+                $newResult = $modifier["method"]($this);
+                if($newResult > $bestResult)
+                    $bestResult = $newResult;
+            }
+        }
+
+        return $bestResult;
+    }
+
+    public function getAttackDamage($attackRole)
+    {
+        $damage = $this->getAttackDamagePerLevel() + $this->strengthModifier;
+        if($attackRole==20)
+            $damage *= 2;
+        if($damage<1)
+            $damage=1;
+        return $damage;
+    }
+
     public function __get($property){
         if($property=="isAlive")
             return $this->isAlive();
@@ -69,7 +108,8 @@ class character
         if($property=="dexterityModifier")
             return $this->abilityModifier($this->dexterity);
         if($property=="hitPoints")
-            return $this->hitPointsPlusConstitution();
+            //return $this->hitPointsPlusConstitution();
+            return $this->hitPoints;
         if($property=="level")
             return $this->getLevel();
         if($property=="maxHitPoints")

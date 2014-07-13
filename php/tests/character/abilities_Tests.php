@@ -56,10 +56,4 @@ class abilities_Tests implements testInterface
         $this->lookupCheck(19,4);
         $this->lookupCheck(20,5);
     }
-
-    public function ItHasHPBonusForConstitutionModifierNonNegative()
-    {
-        $this->character->constitution=12;
-        assert($this->character->hitPoints == 6);
-    }
 }

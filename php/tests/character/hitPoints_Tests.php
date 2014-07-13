@@ -4,54 +4,47 @@ include_once ("../main/alignment.php");
 
 class hitPoints_Tests implements testInterface
 {
+    private $char;
     public function initialize() {
-
+        $this->char = new character();
     }
 
     public function itHasHitPointsOf5(){
-        $c = new character();
-
-        assert(property_exists($c,"hitPoints"));
-        assert($c->hitPoints == 5);
+        assert(property_exists($this->char,"hitPoints"));
+        assert($this->char->hitPoints == 5);
     }
 
     public function itIsAliveIfHitPointsOverZero(){
-        $c = new character();
-        $c->hitPoints=1;
-        assert($c->isAlive === true);
+        $this->char->hitPoints=1;
+        assert($this->char->isAlive === true);
     }
 
     public function itIsNotAliveIfHitPointsZeroOrLess(){
-        $c = new character();
-        $c->takeDamage($c->hitPoints);
-        assert($c->isAlive === false);
+        $this->char->takeDamage($this->char->hitPoints);
+        assert($this->char->isAlive === false);
     }
 
     public function ItHasMaxHitPointsOf5ForLevel1()
     {
-        $c = new character();
-        assert($c->maxHitPoints == 5);
+        assert($this->char->maxHitPoints == 5);
     }
 
     public function ItHasMaxHitPointsOf10ForLevel2()
     {
-        $c = new character();
-        $c->experience+=1000;
-        assert($c->maxHitPoints == 10);
+        $this->char->experience+=1000;
+        assert($this->char->maxHitPoints == 10);
     }
 
     public function ItHasMaxHitPointsOf5PlusConstitutionModifier()
     {
-        $c = new character();
-        $c->constitution=12;
-        assert($c->maxHitPoints == 6);
+        $this->char->constitution=12;
+        assert($this->char->maxHitPoints == 6);
     }
 
     public function ItHasMaxHitPointsOf11AtLevel2PlusConstitutionModifier()
     {
-        $c = new character();
-        $c->constitution=12;
-        $c->experience=1000;
-        assert($c->maxHitPoints == 11);
+        $this->char->constitution=12;
+        $this->char->experience=1000;
+        assert($this->char->maxHitPoints == 11);
     }
 }
