@@ -47,11 +47,65 @@ class attack_Tests implements testInterface
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $c->attack($attacker, $defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
         assert($hpPostAttack == $hpPreAttack-(1+$attacker->strengthModifier));
+    }
+
+    public function ItDealsTwoToDefenderOnSuccessfulAttackAtlevel3()
+    {
+        //Arrange
+        $c = new combat();
+        $attacker = new character();
+        $defender = new character();
+        $roll = $defender->armorClass+1;
+        $hpPreAttack = $defender->hitPoints;
+        $attacker->experience=2000;
+
+        //Act
+        $c->attack($attacker, $defender, $roll);
+        $hpPostAttack = $defender->hitPoints;
+
+        //Assert
+        assert($hpPostAttack == $hpPreAttack-2);
+    }
+
+    public function ItDealsOneToDefenderOnSuccessfulAttackAtlevel2()
+    {
+        //Arrange
+        $c = new combat();
+        $attacker = new character();
+        $defender = new character();
+        $roll = $defender->armorClass+1;
+        $hpPreAttack = $defender->hitPoints;
+        $attacker->experience=1000;
+
+        //Act
+        $c->attack($attacker, $defender, $roll);
+        $hpPostAttack = $defender->hitPoints;
+
+        //Assert
+        assert($hpPostAttack == $hpPreAttack-1);
+    }
+
+    public function ItDealsTwoToDefenderOnSuccessfulAttackAtlevel4()
+    {
+        //Arrange
+        $c = new combat();
+        $attacker = new character();
+        $defender = new character();
+        $roll = $defender->armorClass+1;
+        $hpPreAttack = $defender->hitPoints;
+        $attacker->experience=3000;
+
+        //Act
+        $c->attack($attacker, $defender, $roll);
+        $hpPostAttack = $defender->hitPoints;
+
+        //Assert
+        assert($hpPostAttack == $hpPreAttack-2);
     }
 
     public function ItDealsOneDamagePlusSTRModifierToDefenderOnSuccessfulAttack()
@@ -65,7 +119,7 @@ class attack_Tests implements testInterface
         $attacker->strength = 12;
 
         //Act
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $c->attack($attacker, $defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -84,7 +138,7 @@ class attack_Tests implements testInterface
         $attacker->strength = 1;
 
         //Act
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $c->attack($attacker, $defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -101,7 +155,7 @@ class attack_Tests implements testInterface
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $c->attack($attacker, $defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -118,7 +172,7 @@ class attack_Tests implements testInterface
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $c->attack($attacker, $defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -136,7 +190,7 @@ class attack_Tests implements testInterface
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $c->attack($attacker, $defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -153,7 +207,7 @@ class attack_Tests implements testInterface
         $xpPreAttack = $attacker->experience;
 
         //Act
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $c->attack($attacker, $defender, $roll);
         $xpPostAttack = $attacker->experience;
 
         //Assert
@@ -170,7 +224,7 @@ class attack_Tests implements testInterface
         $xpPreAttack = $attacker->experience;
 
         //Act
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $c->attack($attacker, $defender, $roll);
         $xpPostAttack = $attacker->experience;
 
         //Assert

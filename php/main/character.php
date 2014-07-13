@@ -16,7 +16,6 @@ class character
 
     public function __construct(){
         $this->armorClass = 10;
-        $this->hitPoints = 5;
         $this->strength = 10;
         $this->dexterity = 10;
         $this->constitution = 10;
@@ -24,6 +23,7 @@ class character
         $this->intelligence = 10;
         $this->charisma = 10;
         $this->experience = 0;
+        $this->hitPoints = $this->getMaxHitPoints();
     }
 
     private function isAlive(){
@@ -55,7 +55,6 @@ class character
     public function __get($property){
         if($property=="isAlive")
             return $this->isAlive();
-
         if($property=="strengthModifier")
             return $this->abilityModifier($this->strength);
         if($property=="dexterityModifier")
@@ -64,8 +63,14 @@ class character
             return $this->hitPointsPlusConstitution();
         if($property=="level")
             return $this->getLevel();
-
+        if($property=="maxHitPoints")
+            return $this->getMaxHitPoints();
         return $this->$property;
+    }
+
+    private function getMaxHitPoints()
+    {
+        return (5 * $this->getLevel()) + $this->abilityModifier($this->constitution);
     }
 
     public function __set($property, $value){

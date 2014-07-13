@@ -53,25 +53,6 @@ class character_Tests implements testInterface
         assert($c->armorClass == 10);
     }
 
-    public function itHasHitPointsOf5(){
-        $c = new character();
-
-        assert(property_exists($c,"hitPoints"));
-        assert($c->hitPoints == 5);
-    }
-
-    public function itIsAliveIfHitPointsOverZero(){
-        $c = new character();
-        $c->hitPoints=1;
-        assert($c->isAlive === true);
-    }
-
-    public function itIsNotAliveIfHitPointsZeroOrLess(){
-        $c = new character();
-        $c->takeDamage($c->hitPoints);
-        assert($c->isAlive === false);
-    }
-
     public function ItDefaultsToLevel1AtZeroXP()
     {
         $c = new character();

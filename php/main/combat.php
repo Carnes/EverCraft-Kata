@@ -3,7 +3,7 @@ class combat
 {
     public function attack($attacker, $defender, $damageRole){
         if($damageRole + $attacker->strengthModifier > $defender->armorClass + $defender->dexterityModifier) {
-            $damage = 1 + $attacker->strengthModifier;
+            $damage = ceil($attacker->level/2) + $attacker->strengthModifier;
             if($damageRole==20)
                 $damage *= 2;
             if($damage<1)
