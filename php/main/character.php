@@ -77,8 +77,15 @@ class character
     public function addClass($classType)
     {
         $interfaces = class_implements($classType);
-        if(in_array("characterClass",$interfaces))
-            $this->class[] = new $classType();
+        if(!in_array("characterClass",$interfaces))
+            return;
+
+        $preMaxHP = $this->getMaxHitPoints();
+        
+        $this->class[] = new $classType();
+
+        $postMaxHP = $this->getMaxHitPoints();
+        $this->hitPoints+=($postMaxHP - $preMaxHP);
     }
 
     private function isAlive(){
@@ -99,21 +106,25 @@ class character
     }
 
 
-    private function getModifiers()
+    private function getPeasantModifiers()
     {
         $modifiers = array();
         $modifiers[] = array("target"=>"attack damage per level","method"=>function($character){return ceil($character->level/2);});
         $modifiers[] = array("target"=>"maxHitPoints per level","method"=>function($character){return (5 * $character->level) + $character->constitutionModifier;});
+        return $modifiers;
+    }
+
+    private function getModifiers()
+    {
+        $modifiers = $this->getPeasantModifiers();
 
         foreach($this->class as $class)
-        {
             $modifiers = array_merge($modifiers,$class->getModifiers());
-        }
 
         return $modifiers;
     }
 
-    private function getBestModiferResultForTarget($target)
+    private function getBestModifierResultForTarget($target)
     {
         $bestResult = null;
         foreach ($this->getModifiers() as $modifier)
@@ -128,11 +139,11 @@ class character
 
     private function getAttackDamagePerLevel()
     {
-        return $this->getBestModiferResultForTarget("attack damage per level");
+        return $this->getBestModifierResultForTarget("attack damage per level");
     }
 
     private function getMaxHitPoints()
     {
-        return $this->getBestModiferResultForTarget("maxHitPoints per level");
+        return $this->getBestModifierResultForTarget("maxHitPoints per level");
     }
 }

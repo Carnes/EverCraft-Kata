@@ -63,6 +63,12 @@ class fighter_Tests implements testInterface
     {
         $c = new character();
         $c->addClass(availableClasses::Fighter);
+        assert($c->hitPoints == 10);
+    }
+    public function Has10MaxHitPointsAtLevel1()
+    {
+        $c = new character();
+        $c->addClass(availableClasses::Fighter);
         assert($c->maxHitPoints == 10);
     }
 }
