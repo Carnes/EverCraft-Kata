@@ -12,6 +12,7 @@ class fighterClass implements characterClass
 
         $modifiers = array();
         $modifiers[] = array("target"=>"attack damage per level","method"=>function($character){return $character->level;});
+        $modifiers[] = array("target"=>"maxHitPoints per level","method"=>function($character){return (10 * $character->level) + $character->constitutionModifier;});
 
         return $modifiers;
     }

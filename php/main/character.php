@@ -36,6 +36,14 @@ class character
             return $this->abilityModifier($this->strength);
         if($property=="dexterityModifier")
             return $this->abilityModifier($this->dexterity);
+        if($property=="constitutionModifier")
+            return $this->abilityModifier($this->constitution);
+        if($property=="wisdomModifier")
+            return $this->abilityModifier($this->widsom);
+        if($property=="intelligenceModifier")
+            return $this->abilityModifier($this->intelligence);
+        if($property=="charismaModifier")
+            return $this->abilityModifier($this->charisma);
         if($property=="hitPoints")
             return $this->hitPoints;
         if($property=="level")
@@ -95,6 +103,7 @@ class character
     {
         $modifiers = array();
         $modifiers[] = array("target"=>"attack damage per level","method"=>function($character){return ceil($character->level/2);});
+        $modifiers[] = array("target"=>"maxHitPoints per level","method"=>function($character){return (5 * $character->level) + $character->constitutionModifier;});
 
         foreach($this->class as $class)
         {
@@ -104,24 +113,26 @@ class character
         return $modifiers;
     }
 
-    private function getAttackDamagePerLevel()
+    private function getBestModiferResultForTarget($target)
     {
-        $bestResult = 0;
+        $bestResult = null;
         foreach ($this->getModifiers() as $modifier)
-        {
-            if($modifier["target"]== "attack damage per level")
+            if($modifier["target"]== $target)
             {
                 $newResult = $modifier["method"]($this);
-                if($newResult > $bestResult)
+                if($bestResult == null || $newResult > $bestResult)
                     $bestResult = $newResult;
             }
-        }
-
         return $bestResult;
+    }
+
+    private function getAttackDamagePerLevel()
+    {
+        return $this->getBestModiferResultForTarget("attack damage per level");
     }
 
     private function getMaxHitPoints()
     {
-        return (5 * $this->getLevel()) + $this->abilityModifier($this->constitution);
+        return $this->getBestModiferResultForTarget("maxHitPoints per level");
     }
 }

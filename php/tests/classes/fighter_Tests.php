@@ -59,4 +59,10 @@ class fighter_Tests implements testInterface
         assert($hpPostAttack == $hpPreAttack-(2+$attacker->strengthModifier));
     }
 
+    public function Has10HitPointsAtLevel1()
+    {
+        $c = new character();
+        $c->addClass(availableClasses::Fighter);
+        assert($c->maxHitPoints == 10);
+    }
 }
