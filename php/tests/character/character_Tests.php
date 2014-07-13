@@ -65,4 +65,11 @@ class character_Tests implements testInterface
         $c->experience=12345;
         assert($c->level == 13);
     }
+
+    public function CharWillNotSetNonCharacterClassClass()
+    {
+        $c = new character();
+        $c->addClass("character");
+        assert(count($c->class) == 0);
+    }
 }

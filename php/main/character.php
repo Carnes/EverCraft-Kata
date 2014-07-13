@@ -13,8 +13,10 @@ class character
     public $intelligence;
     public $charisma;
     public $experience;
+    public $class;
 
     public function __construct(){
+        $this->class = array();
         $this->armorClass = 10;
         $this->strength = 10;
         $this->dexterity = 10;
@@ -50,6 +52,13 @@ class character
     {
         $xpLevel = floor($this->experience / 1000);
         return $xpLevel + 1;
+    }
+
+    public function addClass($classType)
+    {
+        $interfaces = class_implements($classType);
+        if(in_array("characterClass",$interfaces))
+            $this->class[] = new $classType();
     }
 
     public function __get($property){
