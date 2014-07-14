@@ -30,37 +30,44 @@ class character
     }
 
     public function __get($property){
-        if($property=="armorClass")
-            return $this->getArmorClass();
-        if($property=="isAlive")
-            return $this->isAlive();
-        if($property=="strengthModifier")
-            return $this->abilityModifier($this->strength);
-        if($property=="dexterityModifier")
-            return $this->abilityModifier($this->dexterity);
-        if($property=="constitutionModifier")
-            return $this->abilityModifier($this->constitution);
-        if($property=="wisdomModifier")
-            return $this->abilityModifier($this->widsom);
-        if($property=="intelligenceModifier")
-            return $this->abilityModifier($this->intelligence);
-        if($property=="charismaModifier")
-            return $this->abilityModifier($this->charisma);
-        if($property=="hitPoints")
-            return $this->hitPoints;
-        if($property=="level")
-            return $this->getLevel();
-        if($property=="maxHitPoints")
-            return $this->getMaxHitPoints();
-        return $this->$property;
+        switch($property) {
+            case "armorClass":
+                return $this->getArmorClass();
+            case "isAlive":
+                return $this->isAlive();
+            case "strengthModifier":
+                return $this->abilityModifier($this->strength);
+            case "dexterityModifier":
+                return $this->abilityModifier($this->dexterity);
+            case "constitutionModifier":
+                return $this->abilityModifier($this->constitution);
+            case "wisdomModifier":
+                return $this->abilityModifier($this->widsom);
+            case "intelligenceModifier":
+                return $this->abilityModifier($this->intelligence);
+            case "charismaModifier":
+                return $this->abilityModifier($this->charisma);
+            case "hitPoints":
+                return $this->hitPoints;
+            case "level":
+                return $this->getLevel();
+            case "maxHitPoints":
+                return $this->getMaxHitPoints();
+            case "alignment":
+                return $this->alignment;
+        }
     }
 
     public function __set($property, $value){
-        if($property=="alignment")
-            if($value == alignment::Good || $value == alignment::Neutral || $value == alignment::Evil)
-                $this->alignment = $value;
-        if($property=="armorClass")
+        switch($property) {
+            case "alignment":
+                if($value == alignment::Good || $value == alignment::Neutral || $value == alignment::Evil)
+                    $this->alignment = $value;
+                return;
+            case "armorClass":
                 $this->armorClass = $value;
+                return;
+        }
     }
 
     public function takeDamage($amount)
