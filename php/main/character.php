@@ -70,12 +70,22 @@ class character
 
     public function getAttackDamage($attackRole)
     {
-        $damage = $this->getAttackDamagePerLevel() + $this->strengthModifier;
+        $damage = $this->getAttackDamagePerLevel() + $this->getAttackDamageBonus();//$this->strengthModifier;
         if($attackRole==20)
             $damage *= $this->getCriticalHitMultiplier();//2;
         if($damage<1)
             $damage=1;
         return $damage;
+    }
+
+    public function getAttackRoleBonus($defender)
+    {
+        $bonus = 0;
+
+        foreach($this->getAllModifiersForTarget("attack role bonus") as $modifier)
+            $bonus += $modifier["method"]($this, $defender);
+
+        return $bonus;
     }
 
     public function addClass($classType)
@@ -90,6 +100,17 @@ class character
 
         $postMaxHP = $this->getMaxHitPoints();
         $this->hitPoints+=($postMaxHP - $preMaxHP);
+    }
+
+    private function getNoClassModifiers()
+    {
+        $modifiers = array();
+        $modifiers[] = array("target"=>"attack damage per level","method"=>function($character){return ceil($character->level/2);});
+        $modifiers[] = array("target"=>"maxHitPoints per level","method"=>function($character){return (5 * $character->level) + $character->constitutionModifier;});
+        $modifiers[] = array("target"=>"critical hit multiplier","method"=>function(){return 2;});
+        $modifiers[] = array("target"=>"attack role bonus","method"=>function($self, $target){return $self->strengthModifier;});
+        $modifiers[] = array("target"=>"attack damage bonus for ability modifier","method"=>function($character){return $character->strengthModifier;});
+        return $modifiers;
     }
 
     private function getArmorClass()
@@ -114,16 +135,6 @@ class character
         return $xpLevel + 1;
     }
 
-
-    private function getNoClassModifiers()
-    {
-        $modifiers = array();
-        $modifiers[] = array("target"=>"attack damage per level","method"=>function($character){return ceil($character->level/2);});
-        $modifiers[] = array("target"=>"maxHitPoints per level","method"=>function($character){return (5 * $character->level) + $character->constitutionModifier;});
-        $modifiers[] = array("target"=>"critical hit multiplier","method"=>function(){return 2;});
-        return $modifiers;
-    }
-
     private function getModifiers()
     {
         $modifiers = $this->getNoClassModifiers();
@@ -141,15 +152,22 @@ class character
     private function getBestModifierResultForTarget($target)
     {
         $bestResult = null;
-        foreach ($this->getModifiers() as $modifier)
-            if($modifier["target"]== $target)
-            {
+        foreach ($this->getAllModifiersForTarget($target) as $modifier)
                 $newResult = $modifier["method"]($this);
                 if($bestResult == null || $newResult > $bestResult)
                     $bestResult = $newResult;
-            }
         return $bestResult;
     }
+
+    private function getAllModifiersForTarget($target)
+    {
+        $mods = array();
+        foreach ($this->getModifiers() as $modifier)
+            if($modifier["target"]== $target)
+                $mods[] = $modifier;
+        return $mods;
+    }
+
 
     private function getCriticalHitMultiplier()
     {
@@ -164,5 +182,10 @@ class character
     private function getMaxHitPoints()
     {
         return $this->getBestModifierResultForTarget("maxHitPoints per level");
+    }
+
+    private function getAttackDamageBonus()
+    {
+        return $this->getBestModifierResultForTarget("attack damage bonus for ability modifier");
     }
 }

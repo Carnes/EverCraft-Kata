@@ -186,15 +186,13 @@ class attack_Tests implements testInterface
         $attacker = new character();
         $defender = new character();
         $defender->dexterity = 12;
-        $roll = $defender->armorClass+1;
-        $hpPreAttack = $defender->hitPoints;
+        $roll = $defender->armorClass - $defender->dexterityModifier;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
-        $hpPostAttack = $defender->hitPoints;
+        $isAttackSuccessful = $c->attack($attacker, $defender, $roll);
 
         //Assert
-        assert($hpPostAttack == $hpPreAttack);
+        assert($isAttackSuccessful == false);
     }
 
     public function ItRaisesAttackerExperienceBy10EachSuccessfulAttack()

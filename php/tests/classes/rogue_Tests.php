@@ -57,4 +57,57 @@ class rogue_Tests implements testInterface
         assert($hpPostAttack == $hpPreAttack-3);
     }
 
+    public function ItIgnoresDefendersDexterityModToArmorClassOnAttack()
+    {
+        //Arrange
+        $c = new combat();
+        $attacker = new character();
+        $attacker->addClass(availableClasses::Rogue);
+        $defender = new character();
+        $defender->dexterity+=2;
+        $roll = $defender->armorClass;
+
+        //Act
+        $isAttackSuccessful = $c->attack($attacker, $defender, $roll);
+
+        //Assert
+        assert($isAttackSuccessful === true);
+    }
+
+    public function ItIgnoresDefendersDexterityModToArmorClassOnAttackUnlessDexModIsNegative()
+    {
+        //Arrange
+        $c = new combat();
+        $attacker = new character();
+        $attacker->addClass(availableClasses::Rogue);
+        $defender = new character();
+        $defender->dexterity-=2;
+        $roll = $defender->armorClass - $defender->dexterityModifier;
+
+        //Act
+        $isAttackSuccessful = $c->attack($attacker, $defender, $roll);
+
+        //Assert
+        assert($isAttackSuccessful === true);
+    }
+
+    public function ItAddsDexterityModifierToAttacksInsteadOfStrength()
+    {
+        //Arrange
+        $c = new combat();
+        $attacker = new character();
+        $attacker->addClass(availableClasses::Rogue);
+        $defender = new character();
+        $attacker->dexterity+=2;
+        $roll = $defender->armorClass+1;
+        $preHP = $defender->hitPoints;
+
+        //Act
+        $c->attack($attacker, $defender, $roll);
+        $postHP = $defender->hitPoints;
+
+        //Assert
+        assert($postHP == $preHP-2);
+    }
+
 }

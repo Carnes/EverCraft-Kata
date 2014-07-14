@@ -2,7 +2,7 @@
 class combat
 {
     public function attack($attacker, $defender, $attackRole){
-        if($attackRole + $attacker->strengthModifier > $defender->armorClass + $defender->dexterityModifier) {
+        if($attackRole + $attacker->getAttackRoleBonus($defender) > $defender->armorClass) {
             $damage = $attacker->getAttackDamage($attackRole);
 
             $defender->takeDamage($damage);

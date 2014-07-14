@@ -13,8 +13,16 @@ class fighterClass implements characterClass
         if($this::$modifiers == null)
         {
             $this::$modifiers = array();
-            $this::$modifiers[] = array("target"=>"attack damage per level","method"=>function($character){return $character->level;});
-            $this::$modifiers[] = array("target"=>"maxHitPoints per level","method"=>function($character){return (10 * $character->level) + $character->constitutionModifier;});
+            $this::$modifiers[] = array(
+                "target"=>"attack damage per level",
+                "method"=>function($character){return $character->level;},
+                //"reason"=>"Fighter gets +1 attack damage for each level",
+            );
+            $this::$modifiers[] = array(
+                "target"=>"maxHitPoints per level",
+                "method"=>function($character){return (10 * $character->level) + $character->constitutionModifier;},
+                //"reason"=>"Fighter gets 10 hit points per level plus constitution modifier",
+            );
         }
     }
 
