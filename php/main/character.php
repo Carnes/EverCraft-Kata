@@ -112,11 +112,31 @@ class character
     private function getNoClassModifiers()
     {
         $modifiers = array();
-        $modifiers[] = array("target"=>"attack damage per level","method"=>function($character){return ceil($character->level/2);});
-        $modifiers[] = array("target"=>"maxHitPoints per level","method"=>function($character){return (5 * $character->level) + $character->constitutionModifier;});
-        $modifiers[] = array("target"=>"critical hit multiplier","method"=>function(){return 2;});
-        $modifiers[] = array("target"=>"attack role bonus","method"=>function($self, $target){return $self->strengthModifier;});
-        $modifiers[] = array("target"=>"attack damage bonus for ability modifier","method"=>function($character){return $character->strengthModifier;});
+        $modifiers[] = array(
+            "target"=>"attack damage per level",
+            "method"=>function($character){return ceil($character->level/2);},
+            //"reason"=>"Base damage per level",
+        );
+        $modifiers[] = array(
+            "target"=>"maxHitPoints per level",
+            "method"=>function($character){return (5 * $character->level) + $character->constitutionModifier;}
+            //"reason"=>"Base 5 hit points per level plus constitution modifier",
+        );
+        $modifiers[] = array(
+            "target"=>"critical hit multiplier",
+            "method"=>function(){return 2;}
+            //"reason"=>"Base critical hit multiplier of 2",
+        );
+        $modifiers[] = array(
+            "target"=>"attack role bonus",
+            "method"=>function($self, $target){return $self->strengthModifier;}
+            //"reason"=>"Base attack role bonus of strength modifier",
+        );
+        $modifiers[] = array(
+            "target"=>"attack damage bonus for ability modifier",
+            "method"=>function($character){return $character->strengthModifier;}
+            //"reason"=>"Base attack damage bonus for ability modifier",
+        );
         return $modifiers;
     }
 
