@@ -6,7 +6,7 @@ class character
     private static $abilityModifierLookup = array(null,-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0,1,1,2,2,3,3,4,4,5);
 
     public $name;
-    public $armorClass;
+    private $armorClass;
     public $strength;
     public $dexterity;
     public $constitution;
@@ -30,6 +30,8 @@ class character
     }
 
     public function __get($property){
+        if($property=="armorClass")
+            return $this->getArmorClass();
         if($property=="isAlive")
             return $this->isAlive();
         if($property=="strengthModifier")
@@ -57,6 +59,8 @@ class character
         if($property=="alignment")
             if($value == alignment::Good || $value == alignment::Neutral || $value == alignment::Evil)
                 $this->alignment = $value;
+        if($property=="armorClass")
+                $this->armorClass = $value;
     }
 
     public function takeDamage($amount)
@@ -68,7 +72,7 @@ class character
     {
         $damage = $this->getAttackDamagePerLevel() + $this->strengthModifier;
         if($attackRole==20)
-            $damage *= 2;
+            $damage *= $this->getCriticalHitMultiplier();//2;
         if($damage<1)
             $damage=1;
         return $damage;
@@ -81,11 +85,16 @@ class character
             return;
 
         $preMaxHP = $this->getMaxHitPoints();
-        
+
         $this->class[] = new $classType();
 
         $postMaxHP = $this->getMaxHitPoints();
         $this->hitPoints+=($postMaxHP - $preMaxHP);
+    }
+
+    private function getArmorClass()
+    {
+        return $this->armorClass + $this->dexterityModifier;
     }
 
     private function isAlive(){
@@ -106,20 +115,25 @@ class character
     }
 
 
-    private function getPeasantModifiers()
+    private function getNoClassModifiers()
     {
         $modifiers = array();
         $modifiers[] = array("target"=>"attack damage per level","method"=>function($character){return ceil($character->level/2);});
         $modifiers[] = array("target"=>"maxHitPoints per level","method"=>function($character){return (5 * $character->level) + $character->constitutionModifier;});
+        $modifiers[] = array("target"=>"critical hit multiplier","method"=>function(){return 2;});
         return $modifiers;
     }
 
     private function getModifiers()
     {
-        $modifiers = $this->getPeasantModifiers();
+        $modifiers = $this->getNoClassModifiers();
 
         foreach($this->class as $class)
-            $modifiers = array_merge($modifiers,$class->getModifiers());
+        {
+            $classModifiers = $class->getModifiers();
+            if(is_array($classModifiers))
+                $modifiers = array_merge($modifiers,$class->getModifiers());
+        }
 
         return $modifiers;
     }
@@ -135,6 +149,11 @@ class character
                     $bestResult = $newResult;
             }
         return $bestResult;
+    }
+
+    private function getCriticalHitMultiplier()
+    {
+        return $this->getBestModifierResultForTarget("critical hit multiplier");
     }
 
     private function getAttackDamagePerLevel()

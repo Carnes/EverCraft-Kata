@@ -49,8 +49,13 @@ class character_Tests implements testInterface
     public function itHasArmorClassOf10(){
         $c = new character();
 
-        assert(property_exists($c,"armorClass"));
         assert($c->armorClass == 10);
+    }
+
+    public function ItHasArmorClassOf10PlusDexModifier(){
+        $c = new character();
+        $c->dexterity+=2;
+        assert($c->armorClass == 11);
     }
 
     public function ItDefaultsToLevel1AtZeroXP()
