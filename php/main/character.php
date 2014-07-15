@@ -75,11 +75,11 @@ class character
         $this->hitPoints-=$amount;
     }
 
-    public function getAttackDamage($attackRole)
+    public function getAttackDamage($defender, $attackRole)
     {
-        $damage = $this->getAttackDamagePerLevel() + $this->getAttackDamageBonus();//$this->strengthModifier;
+        $damage = $this->getAttackDamagePerLevel() + $this->getAttackDamageBonus($defender);
         if($attackRole==20)
-            $damage *= $this->getCriticalHitMultiplier();//2;
+            $damage *= $this->getCriticalHitMultiplier($defender);
         if($damage<1)
             $damage=1;
         return $damage;
@@ -147,7 +147,7 @@ class character
 
     private function getArmorClass()
     {
-        return $this->armorClass + $this->getBestModifierResultForTarget("armor class bonus for ability modifiers");
+        return $this->armorClass + $this->getBestModifierResultForTarget("armor class bonus for ability modifiers", null);
     }
 
     private function isAlive(){
@@ -181,13 +181,17 @@ class character
         return $modifiers;
     }
 
-    private function getBestModifierResultForTarget($target)
+    private function getBestModifierResultForTarget($modifierType, $target)
     {
         $bestResult = null;
-        foreach ($this->getAllModifiersForTarget($target) as $modifier)
-                $newResult = $modifier["method"]($this);
-                if($bestResult == null || $newResult > $bestResult)
-                    $bestResult = $newResult;
+        foreach ($this->getAllModifiersForTarget($modifierType) as $modifier)
+        {
+            $newResult = $modifier["method"]($this, $target);
+            if($bestResult == null || $newResult > $bestResult)
+                $bestResult = $newResult;
+        }
+        if ($bestResult == null)
+            return 0;
         return $bestResult;
     }
 
@@ -201,23 +205,29 @@ class character
     }
 
 
-    private function getCriticalHitMultiplier()
+    private function getCriticalHitMultiplier($defender)
     {
-        return $this->getBestModifierResultForTarget("critical hit multiplier");
+        return $this->getBestModifierResultForTarget("critical hit multiplier", $defender);
     }
 
     private function getAttackDamagePerLevel()
     {
-        return $this->getBestModifierResultForTarget("attack damage per level");
+        return $this->getBestModifierResultForTarget("attack damage per level", null);
     }
 
     private function getMaxHitPoints()
     {
-        return $this->getBestModifierResultForTarget("maxHitPoints per level");
+        return $this->getBestModifierResultForTarget("maxHitPoints per level", null);
     }
 
-    private function getAttackDamageBonus()
+    private function getAttackDamageBonus($defender)
     {
-        return $this->getBestModifierResultForTarget("attack damage bonus for ability modifier");
+        $bonus = 0;
+        $bonus += $this->getBestModifierResultForTarget("attack damage bonus for ability modifier",null);
+
+        foreach($this->getAllModifiersForTarget("attack damage bonus") as $modifier)
+            $bonus += $modifier["method"]($this, $defender);
+
+        return $bonus;
     }
 }
