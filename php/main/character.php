@@ -98,7 +98,7 @@ class character
     public function addClass($classType)
     {
         $interfaces = class_implements($classType);
-        if(!in_array("characterClass",$interfaces))
+        if(!in_array("ICharacterClass",$interfaces))
             return;
 
         $preMaxHP = $this->getMaxHitPoints();

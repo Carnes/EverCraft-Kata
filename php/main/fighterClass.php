@@ -1,6 +1,6 @@
 <?php
-include_once("characterClass.php");
-class fighterClass implements characterClass
+include_once("ICharacterClass.php");
+class fighterClass implements ICharacterClass
 {
     private static $name = "Fighter";
     private static $modifiers = null;

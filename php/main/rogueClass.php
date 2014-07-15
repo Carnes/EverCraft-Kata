@@ -1,5 +1,5 @@
 <?php
-class rogueClass implements characterClass
+class rogueClass implements ICharacterClass
 {
     private static $name = "Rogue";
 
