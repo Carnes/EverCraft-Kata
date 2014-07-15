@@ -42,7 +42,7 @@ class character
             case "constitutionModifier":
                 return $this->abilityModifier($this->constitution);
             case "wisdomModifier":
-                return $this->abilityModifier($this->widsom);
+                return $this->abilityModifier($this->wisdom);
             case "intelligenceModifier":
                 return $this->abilityModifier($this->intelligence);
             case "charismaModifier":
@@ -137,12 +137,17 @@ class character
             "method"=>function($character){return $character->strengthModifier;}
             //"reason"=>"Base attack damage bonus for ability modifier",
         );
+        $modifiers[] = array(
+            "target"=>"armor class bonus for ability modifiers",
+            "method"=>function($character){return $character->dexterityModifier;}
+            //"reason"=>"Base armor class bonus for ability modifier",
+        );
         return $modifiers;
     }
 
     private function getArmorClass()
     {
-        return $this->armorClass + $this->dexterityModifier;
+        return $this->armorClass + $this->getBestModifierResultForTarget("armor class bonus for ability modifiers");
     }
 
     private function isAlive(){
