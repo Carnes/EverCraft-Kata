@@ -1,6 +1,6 @@
 <?php
 include_once("formula/availableFormulaCategories.php");
-include_once("formula/formula.php");
+include_once("characterBaseFormulas.php");
 class character
 {
     private $alignment;
@@ -106,43 +106,6 @@ class character
         $this->hitPoints+=($postMaxHP - $preMaxHP);
     }
 
-    private function getNoClassModifiers()
-    {
-        $mod = array();
-
-        $mod[] = new formula(
-            availableFormulaCategories::$AttackDamagePerLevel,
-            function($character){return ceil($character->level/2);},
-            "Base damage per level"
-        );
-        $mod[] = new formula(
-            availableFormulaCategories::$MaxHitPointsPerLevel,
-            function($character){return (5 * $character->level) + $character->constitutionModifier;},
-            "Base 5 hit points per level plus constitution modifier"
-        );
-        $mod[] = new formula(
-            availableFormulaCategories::$CriticalHitMultiplier,
-            function(){return 2;},
-            "Base critical hit multiplier of 2"
-        );
-        $mod[] = new formula(
-            availableFormulaCategories::$AttackRoleBonus,
-            function($self, $target){return $self->strengthModifier;},
-            "Base attack role bonus of strength modifier"
-        );
-        $mod[] = new formula(
-            availableFormulaCategories::$AttackDamageForAbilityModifier,
-            function($character){return $character->strengthModifier;},
-            "Base attack damage bonus for ability modifier"
-        );
-        $mod[] = new formula(
-            availableFormulaCategories::$ArmorClassBonusForAbilityModifier,
-            function($character){return $character->dexterityModifier;},
-            "Base armor class bonus for ability modifier"
-        );
-        return $mod;
-    }
-
     private function getArmorClass()
     {
         return $this->armorClass + $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier, null);
@@ -167,7 +130,7 @@ class character
 
     private function getModifiers()
     {
-        $modifiers = $this->getNoClassModifiers();
+        $modifiers = characterBaseFormulas::getFormulas();
 
         foreach($this->class as $class)
         {
@@ -192,27 +155,32 @@ class character
     {
         $formulas = $this->getAllModifiersForTarget($category);
         if($category->type == formulaType::Additive)
-        {
-            $result = 0;
-            foreach($formulas as $formula)
-            $result += $formula->execute([$this, $target]);
-            return $result;
-        }
+            return $this->solveAdditiveFormulas($formulas, $target);
         if($category->type == formulaType::BestOfCategory)
-        {
-            $bestResult = null;
-            foreach ($formulas as $formula)
-            {
-                $newResult = $formula->execute([$this, $target]);
-                if($bestResult == null || $newResult > $bestResult)
-                    $bestResult = $newResult;
-            }
-            if ($bestResult == null)
-                return 0;
-            return $bestResult;
-        }
+            return $this->solveBestOfFormulas($formulas, $target);
     }
 
+    private function solveAdditiveFormulas($formulas, $target)
+    {
+        $result = 0;
+        foreach($formulas as $formula)
+            $result += $formula->execute([$this, $target]);
+        return $result;
+    }
+
+    private function solveBestOfFormulas($formulas, $target)
+    {
+        $bestResult = null;
+        foreach ($formulas as $formula)
+        {
+            $newResult = $formula->execute([$this, $target]);
+            if($bestResult == null || $newResult > $bestResult)
+                $bestResult = $newResult;
+        }
+        if ($bestResult == null)
+            return 0;
+        return $bestResult;
+    }
 
     private function getCriticalHitMultiplier($defender)
     {
