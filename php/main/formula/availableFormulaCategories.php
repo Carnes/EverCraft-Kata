@@ -9,6 +9,7 @@ class availableFormulaCategories{
     public static $CriticalHitMultiplier;
     public static $AttackDamageForAbilityModifier;
     public static $ArmorClassBonusForAbilityModifier;
+    public static $StrengthModifierBonus;
 
     public static function init()
     {
@@ -19,6 +20,7 @@ class availableFormulaCategories{
         self::$AttackDamagePerLevel = new formulaCategory(formulaType::BestOfCategory, "Attack damage per level");
         self::$AttackDamageForAbilityModifier = new formulaCategory(formulaType::BestOfCategory, "Attack damage for ability modifier");
         self::$ArmorClassBonusForAbilityModifier = new formulaCategory(formulaType::BestOfCategory,"Armor class bonus for ability modifiers");
+        self::$StrengthModifierBonus = new formulaCategory(formulaType::Additive, "Ability Modifier Bonus");
     }
 }
 availableFormulaCategories::init(); //PHP is awesome and weird : )

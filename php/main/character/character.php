@@ -9,7 +9,8 @@ class character
     private static $abilityModifierLookup = array(null,-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0,1,1,2,2,3,3,4,4,5);
 
     public $name;
-    private $baseArmorClass;
+    private $_armorClass;
+    private $_race;
     public $strength;
     public $dexterity;
     public $constitution;
@@ -18,11 +19,10 @@ class character
     public $charisma;
     public $experience;
     public $class;
-    public $race;
 
     public function __construct(){
         $this->class = array();
-        $this->baseArmorClass = 10;
+        $this->_armorClass = 10;
         $this->strength = 10;
         $this->dexterity = 10;
         $this->constitution = 10;
@@ -30,8 +30,8 @@ class character
         $this->intelligence = 10;
         $this->charisma = 10;
         $this->experience = 0;
+        $this->_race = new humanRace();
         $this->hitPoints = $this->getMaxHitPoints();
-        $this->race = new humanRace();
     }
 
     public function __get($property){
@@ -41,7 +41,7 @@ class character
             case "isAlive":
                 return $this->isAlive();
             case "strengthModifier":
-                return $this->abilityModifier($this->strength);
+                return $this->abilityModifier($this->strength)+$this->solveFormulaCategory(availableFormulaCategories::$StrengthModifierBonus);
             case "dexterityModifier":
                 return $this->abilityModifier($this->dexterity);
             case "constitutionModifier":
@@ -60,6 +60,8 @@ class character
                 return $this->getMaxHitPoints();
             case "alignment":
                 return $this->alignment;
+            case "race":
+                return $this->_race;
         }
     }
 
@@ -70,7 +72,10 @@ class character
                     $this->alignment = $value;
                 return;
             case "armorClass":
-                $this->baseArmorClass = $value;
+                $this->_armorClass = $value;
+                return;
+            case "race":
+                $this->setRace($value);
                 return;
         }
     }
@@ -107,6 +112,14 @@ class character
         return $this->solveFormulaCategory(availableFormulaCategories::$AttackRoleBonus, $defender);
     }
 
+    public function setRace($race)
+    {
+        $interfaces = class_implements($race);
+        if(!in_array("ICharacterRace",$interfaces))
+            return;
+        $this->_race = $race;
+    }
+
     public function addClass($classType)
     {
         $interfaces = class_implements($classType);
@@ -123,7 +136,7 @@ class character
 
     private function getArmorClass()
     {
-        return $this->baseArmorClass + $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier, null);
+        return $this->_armorClass + $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier, null);
     }
 
     private function isAlive(){
@@ -147,11 +160,15 @@ class character
     {
         $modifiers = characterBaseFormulas::getFormulas();
 
+        $raceFormulas = $this->_race->getModifiers();
+        if(is_array($raceFormulas))
+            $modifiers = array_merge($modifiers,$raceFormulas);
+
         foreach($this->class as $class)
         {
             $classModifiers = $class->getModifiers();
             if(is_array($classModifiers))
-                $modifiers = array_merge($modifiers,$class->getModifiers());
+                $modifiers = array_merge($modifiers,$classModifiers);
         }
 
         return $modifiers;
@@ -166,7 +183,7 @@ class character
         return $mods;
     }
 
-    private function solveFormulaCategory($category, $target)
+    private function solveFormulaCategory($category, $target = null)
     {
         $formulas = $this->getAllModifiersForTarget($category);
         if($category->type == formulaType::Additive)
