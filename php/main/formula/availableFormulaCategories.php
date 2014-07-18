@@ -14,6 +14,7 @@ class availableFormulaCategories{
     public static $IntelligenceModifierBonus;
     public static $WisdomModifierBonus;
     public static $CharismaModifierBonus;
+    public static $ConstitutionModifierBonus;
 
     public static function init()
     {
@@ -30,6 +31,7 @@ class availableFormulaCategories{
         self::$ArmorClassBonus = new formulaCategory(formulaType::Additive, "Armor class bonus");
         self::$AttackRoleBonus = new formulaCategory(formulaType::Additive, "Attack role bonus");
         self::$AttackDamageBonus = new formulaCategory(formulaType::Additive, "Attack damage bonus");
+        self::$ConstitutionModifierBonus = new formulaCategory(formulaType::Additive, "Constitution modifier bonus");
     }
 }
 availableFormulaCategories::init(); //PHP is awesome and weird : )

@@ -5,14 +5,14 @@ class orcRace implements ICharacterRace
     private static $name = "Orc";
 
     public function getName(){
-        return $this::$name;
+        return self::$name;
     }
 
     private static $formulas = null;
 
     public function __construct()
     {
-        if($this::$formulas==null)
+        if(self::$formulas==null)
         {
             self::$formulas = array();
             self::$formulas[] = new formula(
