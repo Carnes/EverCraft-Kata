@@ -82,7 +82,8 @@ class character
 
     public function attack($defender, $roll)
     {
-        if($roll + $this->getAttackRoleBonus($defender) > $defender->armorClass) {
+        $defender->getDefendingArmorClass($this);
+        if($roll + $this->getAttackRoleBonus($defender) > $defender->getDefendingArmorClass($this)) {
             $damage = $this->getAttackDamage($defender, $roll);
 
             $defender->takeDamage($damage);
@@ -100,7 +101,7 @@ class character
     public function getAttackDamage($defender, $attackRole)
     {
         $damage = $this->getAttackDamagePerLevel() + $this->getAttackDamageBonus($defender);
-        if($attackRole==20)
+        if($attackRole >= 20 - $this->getCriticalHitRoleBonus($defender))
             $damage *= $this->getCriticalHitMultiplier($defender);
         if($damage<1)
             $damage=1;
@@ -110,6 +111,11 @@ class character
     public function getAttackRoleBonus($defender)
     {
         return $this->solveFormulaCategory(availableFormulaCategories::$AttackRoleBonus, $defender);
+    }
+
+    public function getDefendingArmorClass($attacker)
+    {
+        return $this->getArmorClass($attacker);
     }
 
     public function setRace($race)
@@ -134,11 +140,11 @@ class character
         $this->hitPoints+=($postMaxHP - $preMaxHP);
     }
 
-    private function getArmorClass()
+    private function getArmorClass($target = null)
     {
         $ac = $this->_armorClass;
         $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier);
-        $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonus);
+        $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonus, $target);
         return $ac;
     }
 
@@ -220,6 +226,11 @@ class character
     private function getCriticalHitMultiplier($defender)
     {
         return $this->solveFormulaCategory(availableFormulaCategories::$CriticalHitMultiplier, $defender);
+    }
+
+    private function getCriticalHitRoleBonus($defender)
+    {
+        return $this->solveFormulaCategory(availableFormulaCategories::$CriticalHitRollBonus, $defender);
     }
 
     private function getAttackDamagePerLevel()

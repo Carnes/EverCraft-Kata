@@ -48,4 +48,50 @@ class elf_Tests implements testInterface
         //Assert
         assert($elfDexMod == $defaultDexMod + 1);
     }
+
+    public function ItGivesMinus1ConstitutionModifier()
+    {
+        //Arrange
+        $c = new character();
+        $defaultConMod = $c->constitutionModifier;
+
+        //Act
+        $c->race = new elfRace();
+        $elfConMod = $c->constitutionModifier;
+
+        //Assert
+        assert($elfConMod == $defaultConMod - 1);
+    }
+
+    public function ItGivesPlus1ToCriticalHitRollBonus()
+    {
+        //Arrange
+        $attacker = new character();
+        $attacker->race = new elfRace();
+        $defender = new character();
+        $preHP = $defender->hitPoints;
+
+        //Act
+        $attacker->attack($defender,19);
+        $damageDone = $preHP - $defender->hitPoints;
+
+        //Assert
+        assert($damageDone == 2);
+    }
+
+    public function ItGetsPlus2ACWhenDefendingAgainstOrcs()
+    {
+        //Arrange
+        $attacker = new character();
+        $attacker->race = new orcRace();
+        $defender = new character();
+        $defender->race = new elfRace();
+        $roll = $defender->armorClass;
+
+        //Act
+        $isAttackSuccessful = $attacker->attack($defender, $roll);
+
+        //Assert
+        assert($isAttackSuccessful === false);
+    }
 }

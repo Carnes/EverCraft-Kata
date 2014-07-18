@@ -7,6 +7,7 @@ class availableFormulaCategories{
     public static $AttackDamageBonus;
     public static $AttackDamagePerLevel;
     public static $CriticalHitMultiplier;
+    public static $CriticalHitRollBonus;
     public static $AttackDamageForAbilityModifier;
     public static $ArmorClassBonus;
     public static $ArmorClassBonusForAbilityModifier;
@@ -34,6 +35,7 @@ class availableFormulaCategories{
         self::$AttackDamageBonus = new formulaCategory(formulaType::Additive, "Attack damage bonus");
         self::$ConstitutionModifierBonus = new formulaCategory(formulaType::Additive, "Constitution modifier bonus");
         self::$DexterityModifierBonus = new formulaCategory(formulaType::Additive, "Dexterity modifier bonus");
+        self::$CriticalHitRollBonus = new formulaCategory(formulaType::Additive, "Critical hit roll bonus");
     }
 }
 availableFormulaCategories::init(); //PHP is awesome and weird : )
