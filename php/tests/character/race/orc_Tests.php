@@ -46,4 +46,60 @@ class orc_Tests implements testInterface
         //Assert
         assert($orcStrMod == $defaultStrMod + 2);
     }
+
+    public function ItHasMinus1ToIntelligence()
+    {
+        //Arrange
+        $c = new character();
+        $defaultIntMod = $c->intelligenceModifier;
+
+        //Act
+        $c->race = new orcRace();
+        $orcIntMod = $c->intelligenceModifier;
+
+        //Assert
+        assert($orcIntMod == $defaultIntMod -1);
+    }
+
+    public function ItHasMinus1ToWisdom()
+    {
+        //Arrange
+        $c = new character();
+        $defaultWisMod = $c->wisdomModifier;
+
+        //Act
+        $c->race = new orcRace();
+        $orcWisMod = $c->wisdomModifier;
+
+        //Assert
+        assert($orcWisMod == $defaultWisMod -1);
+    }
+
+    public function ItHasMinus1ToCharisma()
+    {
+        //Arrange
+        $c = new character();
+        $defaultChaMod = $c->charismaModifier;
+
+        //Act
+        $c->race = new orcRace();
+        $orcChaMod = $c->charismaModifier;
+
+        //Assert
+        assert($orcChaMod == $defaultChaMod -1);
+    }
+
+    public function ItGetsPlus2TOAC()
+    {
+        //Arrange
+        $c = new character();
+        $defaultAC = $c->armorClass;
+
+        //Act
+        $c->race = new orcRace();
+        $orcAC = $c->armorClass;
+
+        //Assert
+        assert($orcAC == $defaultAC +2);
+    }
 }

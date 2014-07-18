@@ -41,17 +41,17 @@ class character
             case "isAlive":
                 return $this->isAlive();
             case "strengthModifier":
-                return $this->abilityModifier($this->strength)+$this->solveFormulaCategory(availableFormulaCategories::$StrengthModifierBonus);
+                return $this->getStrengthAbilityModifier();
             case "dexterityModifier":
                 return $this->abilityModifier($this->dexterity);
             case "constitutionModifier":
                 return $this->abilityModifier($this->constitution);
             case "wisdomModifier":
-                return $this->abilityModifier($this->wisdom);
+                return $this->getWisdomAbilityModifier();
             case "intelligenceModifier":
-                return $this->abilityModifier($this->intelligence);
+                return $this->getIntelligenceAbilityModifier();
             case "charismaModifier":
-                return $this->abilityModifier($this->charisma);
+                return $this->getCharismaAbilityModifier();
             case "hitPoints":
                 return $this->hitPoints;
             case "level":
@@ -136,7 +136,10 @@ class character
 
     private function getArmorClass()
     {
-        return $this->_armorClass + $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier, null);
+        $ac = $this->_armorClass;
+        $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier);
+        $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonus);
+        return $ac;
     }
 
     private function isAlive(){
@@ -236,5 +239,33 @@ class character
         $bonus += $this->solveFormulaCategory(availableFormulaCategories::$AttackDamageBonus, $target);
 
         return $bonus;
+    }
+
+    private function getStrengthAbilityModifier()
+    {
+        $strMod = $this->abilityModifier($this->strength);
+        $strMod += $this->solveFormulaCategory(availableFormulaCategories::$StrengthModifierBonus);
+        return $strMod;
+    }
+
+    private function getIntelligenceAbilityModifier()
+    {
+        $intMod = $this->abilityModifier($this->intelligence);
+        $intMod += $this->solveFormulaCategory(availableFormulaCategories::$IntelligenceModifierBonus);
+        return $intMod;
+    }
+
+    private function getWisdomAbilityModifier()
+    {
+        $wisMod = $this->abilityModifier($this->wisdom);
+        $wisMod += $this->solveFormulaCategory(availableFormulaCategories::$WisdomModifierBonus);
+        return $wisMod;
+    }
+
+    private function getCharismaAbilityModifier()
+    {
+        $chaMod = $this->abilityModifier($this->charisma);
+        $chaMod += $this->solveFormulaCategory(availableFormulaCategories::$CharismaModifierBonus);
+        return $chaMod;
     }
 }
