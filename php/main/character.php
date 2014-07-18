@@ -1,4 +1,6 @@
 <?php
+include_once("availableFormulaCategories.php");
+include_once("formula.php");
 class character
 {
     private $alignment;
@@ -87,12 +89,7 @@ class character
 
     public function getAttackRoleBonus($defender)
     {
-        $bonus = 0;
-
-        foreach($this->getAllModifiersForTarget("attack role bonus") as $modifier)
-            $bonus += $modifier["method"]($this, $defender);
-
-        return $bonus;
+        return $this->solveFormulaCategory(availableFormulaCategories::$AttackRoleBonus, $defender);
     }
 
     public function addClass($classType)
@@ -111,43 +108,44 @@ class character
 
     private function getNoClassModifiers()
     {
-        $modifiers = array();
-        $modifiers[] = array(
-            "target"=>"attack damage per level",
-            "method"=>function($character){return ceil($character->level/2);},
-            //"reason"=>"Base damage per level",
+        $mod = array();
+
+        $mod[] = new formula(
+            availableFormulaCategories::$AttackDamagePerLevel,
+            function($character){return ceil($character->level/2);},
+            "Base damage per level"
         );
-        $modifiers[] = array(
-            "target"=>"maxHitPoints per level",
-            "method"=>function($character){return (5 * $character->level) + $character->constitutionModifier;}
-            //"reason"=>"Base 5 hit points per level plus constitution modifier",
+        $mod[] = new formula(
+            availableFormulaCategories::$MaxHitPointsPerLevel,
+            function($character){return (5 * $character->level) + $character->constitutionModifier;},
+            "Base 5 hit points per level plus constitution modifier"
         );
-        $modifiers[] = array(
-            "target"=>"critical hit multiplier",
-            "method"=>function(){return 2;}
-            //"reason"=>"Base critical hit multiplier of 2",
+        $mod[] = new formula(
+            availableFormulaCategories::$CriticalHitMultiplier,
+            function(){return 2;},
+            "Base critical hit multiplier of 2"
         );
-        $modifiers[] = array(
-            "target"=>"attack role bonus",
-            "method"=>function($self, $target){return $self->strengthModifier;}
-            //"reason"=>"Base attack role bonus of strength modifier",
+        $mod[] = new formula(
+            availableFormulaCategories::$AttackRoleBonus,
+            function($self, $target){return $self->strengthModifier;},
+            "Base attack role bonus of strength modifier"
         );
-        $modifiers[] = array(
-            "target"=>"attack damage bonus for ability modifier",
-            "method"=>function($character){return $character->strengthModifier;}
-            //"reason"=>"Base attack damage bonus for ability modifier",
+        $mod[] = new formula(
+            availableFormulaCategories::$AttackDamageForAbilityModifier,
+            function($character){return $character->strengthModifier;},
+            "Base attack damage bonus for ability modifier"
         );
-        $modifiers[] = array(
-            "target"=>"armor class bonus for ability modifiers",
-            "method"=>function($character){return $character->dexterityModifier;}
-            //"reason"=>"Base armor class bonus for ability modifier",
+        $mod[] = new formula(
+            availableFormulaCategories::$ArmorClassBonusForAbilityModifier,
+            function($character){return $character->dexterityModifier;},
+            "Base armor class bonus for ability modifier"
         );
-        return $modifiers;
+        return $mod;
     }
 
     private function getArmorClass()
     {
-        return $this->armorClass + $this->getBestModifierResultForTarget("armor class bonus for ability modifiers", null);
+        return $this->armorClass + $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier, null);
     }
 
     private function isAlive(){
@@ -181,52 +179,61 @@ class character
         return $modifiers;
     }
 
-    private function getBestModifierResultForTarget($modifierType, $target)
-    {
-        $bestResult = null;
-        foreach ($this->getAllModifiersForTarget($modifierType) as $modifier)
-        {
-            $newResult = $modifier["method"]($this, $target);
-            if($bestResult == null || $newResult > $bestResult)
-                $bestResult = $newResult;
-        }
-        if ($bestResult == null)
-            return 0;
-        return $bestResult;
-    }
-
     private function getAllModifiersForTarget($target)
     {
         $mods = array();
         foreach ($this->getModifiers() as $modifier)
-            if($modifier["target"]== $target)
+            if($modifier->category== $target)
                 $mods[] = $modifier;
         return $mods;
+    }
+
+    private function solveFormulaCategory($category, $target)
+    {
+        $formulas = $this->getAllModifiersForTarget($category);
+        if($category->type == formulaType::Additive)
+        {
+            $result = 0;
+            foreach($formulas as $formula)
+            $result += $formula->execute([$this, $target]);
+            return $result;
+        }
+        if($category->type == formulaType::BestOfCategory)
+        {
+            $bestResult = null;
+            foreach ($formulas as $formula)
+            {
+                $newResult = $formula->execute([$this, $target]);
+                if($bestResult == null || $newResult > $bestResult)
+                    $bestResult = $newResult;
+            }
+            if ($bestResult == null)
+                return 0;
+            return $bestResult;
+        }
     }
 
 
     private function getCriticalHitMultiplier($defender)
     {
-        return $this->getBestModifierResultForTarget("critical hit multiplier", $defender);
+        return $this->solveFormulaCategory(availableFormulaCategories::$CriticalHitMultiplier, $defender);
     }
 
     private function getAttackDamagePerLevel()
     {
-        return $this->getBestModifierResultForTarget("attack damage per level", null);
+        return $this->solveFormulaCategory(availableFormulaCategories::$AttackDamagePerLevel, null);
     }
 
     private function getMaxHitPoints()
     {
-        return $this->getBestModifierResultForTarget("maxHitPoints per level", null);
+        return $this->solveFormulaCategory(availableFormulaCategories::$MaxHitPointsPerLevel, null);
     }
 
-    private function getAttackDamageBonus($defender)
+    private function getAttackDamageBonus($target)
     {
         $bonus = 0;
-        $bonus += $this->getBestModifierResultForTarget("attack damage bonus for ability modifier",null);
-
-        foreach($this->getAllModifiersForTarget("attack damage bonus") as $modifier)
-            $bonus += $modifier["method"]($this, $defender);
+        $bonus += $this->solveFormulaCategory(availableFormulaCategories::$AttackDamageForAbilityModifier,null);
+        $bonus += $this->solveFormulaCategory(availableFormulaCategories::$AttackDamageBonus, $target);
 
         return $bonus;
     }
