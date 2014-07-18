@@ -50,6 +50,20 @@ class dwarf_Tests implements testInterface
         assert($dwarfConMod == $defaultConMod + 1);
     }
 
+    public function ItGivesMinus1CharismaModifier()
+    {
+        //Arrange
+        $c = new character();
+        $defaultChaMod = $c->charismaModifier;
+
+        //Act
+        $c->race = new dwarfRace();
+        $dwarfChaMod = $c->charismaModifier;
+
+        //Assert
+        assert($dwarfChaMod == $defaultChaMod - 1);
+    }
+
     public function ItGivesDoubleConstitutionModifierBonusForHitPointsPerLevel()
     {
         //Arrange

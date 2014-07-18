@@ -32,6 +32,11 @@ class dwarfRace implements ICharacterRace
                 function($dwarf, $target){ if($target->race instanceof orcRace) return 2;  },
                 "Dwarf gets +2 to attack roll against Orcs"
             );
+            self::$formulas[] = new formula(
+                availableFormulaCategories::$CharismaModifierBonus,
+                function(){return -1;},
+                "Dwarf gets -1 to Charisma modifier"
+            );
         }
     }
 
