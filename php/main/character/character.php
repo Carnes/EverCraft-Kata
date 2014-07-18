@@ -8,7 +8,7 @@ class character
     private static $abilityModifierLookup = array(null,-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0,1,1,2,2,3,3,4,4,5);
 
     public $name;
-    private $armorClass;
+    private $baseArmorClass;
     public $strength;
     public $dexterity;
     public $constitution;
@@ -20,7 +20,7 @@ class character
 
     public function __construct(){
         $this->class = array();
-        $this->armorClass = 10;
+        $this->baseArmorClass = 10;
         $this->strength = 10;
         $this->dexterity = 10;
         $this->constitution = 10;
@@ -67,9 +67,21 @@ class character
                     $this->alignment = $value;
                 return;
             case "armorClass":
-                $this->armorClass = $value;
+                $this->baseArmorClass = $value;
                 return;
         }
+    }
+
+    public function attack($defender, $roll)
+    {
+        if($roll + $this->getAttackRoleBonus($defender) > $defender->armorClass) {
+            $damage = $this->getAttackDamage($defender, $roll);
+
+            $defender->takeDamage($damage);
+            $this->experience += 10;
+            return true;
+        }
+        return false;
     }
 
     public function takeDamage($amount)
@@ -108,7 +120,7 @@ class character
 
     private function getArmorClass()
     {
-        return $this->armorClass + $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier, null);
+        return $this->baseArmorClass + $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier, null);
     }
 
     private function isAlive(){

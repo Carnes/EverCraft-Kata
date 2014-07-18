@@ -1,5 +1,4 @@
 <?php
-include_once ("combat.php");
 include_once ("character/character.php");
 include_once ("character/classes/availableClasses.php");
 include_once ("character/classes/warMonkClass.php");
@@ -55,7 +54,7 @@ class warMonk_Tests implements testInterface
         $roll = $defender->armorClass +1;
 
         $preHP = $defender->hitPoints;
-        (new combat())->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $damageDone = $preHP - $defender->hitPoints;
 
         assert($damageDone == 3);
@@ -71,7 +70,7 @@ class warMonk_Tests implements testInterface
         $roll = $defender->armorClass +1;
 
         $preHP = $defender->hitPoints;
-        (new combat())->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         return $preHP - $defender->hitPoints;
     }
 

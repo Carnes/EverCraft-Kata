@@ -14,7 +14,7 @@ class formula
     public function __construct($category, $execute, $reason){
         if(!is_callable($execute))
             throw new Exception("Formula must have an executable method");
-        if(is_string($reason))
+        if(!is_string($reason))
             $reason = "";
 
         $this->category = $category;

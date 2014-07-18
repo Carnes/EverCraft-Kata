@@ -1,5 +1,4 @@
 <?php
-include_once ("combat.php");
 include_once ("character/character.php");
 include_once ("character/classes/availableClasses.php");
 include_once ("character/classes/rogueClass.php");
@@ -42,7 +41,6 @@ class rogue_Tests implements testInterface
     public function ItDoesTripleDamageOnCritialHit()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $attacker->addClass(availableClasses::Rogue);
         $defender = new character();
@@ -50,7 +48,7 @@ class rogue_Tests implements testInterface
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -60,7 +58,6 @@ class rogue_Tests implements testInterface
     public function ItIgnoresDefendersDexterityModToArmorClassOnAttack()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $attacker->addClass(availableClasses::Rogue);
         $defender = new character();
@@ -68,7 +65,7 @@ class rogue_Tests implements testInterface
         $roll = $defender->armorClass;
 
         //Act
-        $isAttackSuccessful = $c->attack($attacker, $defender, $roll);
+        $isAttackSuccessful = $attacker->attack($defender, $roll);
 
         //Assert
         assert($isAttackSuccessful === true);
@@ -77,15 +74,17 @@ class rogue_Tests implements testInterface
     public function ItIgnoresDefendersDexterityModToArmorClassOnAttackUnlessDexModIsNegative()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $attacker->addClass(availableClasses::Rogue);
         $defender = new character();
         $defender->dexterity-=2;
         $roll = $defender->armorClass - $defender->dexterityModifier;
 
+        assert($roll == 10);
+        assert($defender->armorClass == 9);
+
         //Act
-        $isAttackSuccessful = $c->attack($attacker, $defender, $roll);
+        $isAttackSuccessful = $attacker->attack($defender, $roll);
 
         //Assert
         assert($isAttackSuccessful === true);
@@ -94,7 +93,6 @@ class rogue_Tests implements testInterface
     public function ItAddsDexterityModifierToAttacksInsteadOfStrength()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $attacker->addClass(availableClasses::Rogue);
         $defender = new character();
@@ -103,7 +101,7 @@ class rogue_Tests implements testInterface
         $preHP = $defender->hitPoints;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $postHP = $defender->hitPoints;
 
         //Assert

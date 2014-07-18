@@ -1,5 +1,4 @@
 <?php
-include_once ("combat.php");
 include_once ("character/character.php");
 include_once ("character/classes/availableClasses.php");
 include_once ("character/classes/fighterClass.php");
@@ -43,7 +42,6 @@ class fighter_Tests implements testInterface
     public function DoesTwoDamageAtLevel2ForSuccessfulAttack()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $attacker->experience=1000; //lvl 2
@@ -52,7 +50,7 @@ class fighter_Tests implements testInterface
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert

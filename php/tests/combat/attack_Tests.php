@@ -1,5 +1,4 @@
 <?php
-include_once ("combat.php");
 include_once ("character/character.php");
 
 class attack_Tests implements testInterface
@@ -10,36 +9,32 @@ class attack_Tests implements testInterface
 
     public function ItExists()
     {
-        assert(class_exists("combat"));
-        assert(method_exists("combat","attack"));
+        assert(method_exists("character","attack"));
     }
 
     public function ItReturnsTrueOnAttackSuccess()
     {
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = $defender->armorClass+1;
 
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $combatResult = $attacker->attack($defender, $roll);
         assert($combatResult === true);
     }
 
     public function ItReturnsFalseWhenRollNotGreaterThanDefenderAC()
     {
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = $defender->armorClass;
 
-        $combatResult = $c->attack($attacker, $defender, $roll);
+        $combatResult = $attacker->attack($defender, $roll);
         assert($combatResult === false);
     }
 
     public function ItDealsOneToDefenderOnSuccessfulAttack()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $attacker->strength = 12;
         $defender = new character();
@@ -47,7 +42,7 @@ class attack_Tests implements testInterface
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -57,7 +52,6 @@ class attack_Tests implements testInterface
     public function ItDealsTwoToDefenderOnSuccessfulAttackAtlevel3()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = $defender->armorClass+1;
@@ -65,7 +59,7 @@ class attack_Tests implements testInterface
         $attacker->experience=2000;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -75,7 +69,6 @@ class attack_Tests implements testInterface
     public function ItDealsOneToDefenderOnSuccessfulAttackAtlevel2()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = $defender->armorClass+1;
@@ -83,7 +76,7 @@ class attack_Tests implements testInterface
         $attacker->experience=1000;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -93,7 +86,6 @@ class attack_Tests implements testInterface
     public function ItDealsTwoToDefenderOnSuccessfulAttackAtlevel4()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = $defender->armorClass+1;
@@ -101,7 +93,7 @@ class attack_Tests implements testInterface
         $attacker->experience=3000;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -111,7 +103,6 @@ class attack_Tests implements testInterface
     public function ItDealsOneDamagePlusSTRModifierToDefenderOnSuccessfulAttack()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = $defender->armorClass+1;
@@ -119,7 +110,7 @@ class attack_Tests implements testInterface
         $attacker->strength = 12;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -129,7 +120,6 @@ class attack_Tests implements testInterface
     public function ItDealsOneDamageEvenWithMinusFiveModifierToDefenderOnSuccessfulAttack()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $defender->armorClass = 5;
@@ -138,7 +128,7 @@ class attack_Tests implements testInterface
         $attacker->strength = 1;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -148,14 +138,13 @@ class attack_Tests implements testInterface
     public function ItDealsZeroDamageToDefenderOnFailedAttack()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = $defender->armorClass;
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -165,14 +154,13 @@ class attack_Tests implements testInterface
     public function ItDealsDoubleDamageToDefenderOnSuccessfulCriticalAttack()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = 20;
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $hpPostAttack = $defender->hitPoints;
 
         //Assert
@@ -182,14 +170,13 @@ class attack_Tests implements testInterface
     public function ItAddsDexterityModifierToArmorClass()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $defender->dexterity = 12;
         $roll = $defender->armorClass - $defender->dexterityModifier;
 
         //Act
-        $isAttackSuccessful = $c->attack($attacker, $defender, $roll);
+        $isAttackSuccessful = $attacker->attack($defender, $roll);
 
         //Assert
         assert($isAttackSuccessful == false);
@@ -198,14 +185,13 @@ class attack_Tests implements testInterface
     public function ItRaisesAttackerExperienceBy10EachSuccessfulAttack()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = $defender->armorClass+1;
         $xpPreAttack = $attacker->experience;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $xpPostAttack = $attacker->experience;
 
         //Assert
@@ -215,14 +201,13 @@ class attack_Tests implements testInterface
     public function ItAttackerExperienceStaysTheSameOnFailedAttack()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $defender = new character();
         $roll = $defender->armorClass;
         $xpPreAttack = $attacker->experience;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $xpPostAttack = $attacker->experience;
 
         //Assert

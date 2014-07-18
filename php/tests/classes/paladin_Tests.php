@@ -1,5 +1,4 @@
 <?php
-include_once ("combat.php");
 include_once ("character/character.php");
 include_once ("character/classes/availableClasses.php");
 include_once ("character/classes/paladinClass.php");
@@ -63,7 +62,7 @@ class paladin_Tests implements testInterface
         $roll = $defender->armorClass - 1;
         $preHP = $defender->hitPoints;
 
-        $attackSuccess = (new combat())->attack($attacker, $defender, $roll);
+        $attackSuccess = $attacker->attack($defender, $roll);
         $dmgDone = $preHP - $defender->hitPoints;
 
         assert($attackSuccess === true);
@@ -73,7 +72,6 @@ class paladin_Tests implements testInterface
     public function ItDoesTripleDamageOnCriticalHitToEvil()
     {
         //Arrange
-        $c = new combat();
         $attacker = new character();
         $attacker->addClass(availableClasses::Paladin);
         $defender = new character();
@@ -82,7 +80,7 @@ class paladin_Tests implements testInterface
         $hpPreAttack = $defender->hitPoints;
 
         //Act
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         $damageDone = $hpPreAttack - $defender->hitPoints;
 
         //Assert
@@ -91,7 +89,6 @@ class paladin_Tests implements testInterface
 
     private function doAttackForLevel($level)
     {
-        $c = new combat();
         $attacker = new character();
         $attacker->addClass(availableClasses::Paladin);
         $attacker->experience = ($level * 1000) - 1000;
@@ -99,7 +96,7 @@ class paladin_Tests implements testInterface
         $roll = $defender->armorClass+1;
         $hpPreAttack = $defender->hitPoints;
 
-        $c->attack($attacker, $defender, $roll);
+        $attacker->attack($defender, $roll);
         return $hpPreAttack - $defender->hitPoints;
     }
 
