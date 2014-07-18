@@ -1,4 +1,5 @@
 <?php
+include_once("ICharacterClass.php");
 class rogueClass implements ICharacterClass
 {
     private static $name = "Rogue";

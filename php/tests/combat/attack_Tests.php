@@ -1,6 +1,6 @@
 <?php
-include_once ("../main/combat.php");
-include_once ("../main/character.php");
+include_once ("combat.php");
+include_once ("character/character.php");
 
 class attack_Tests implements testInterface
 {

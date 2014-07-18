@@ -1,4 +1,5 @@
 <?php
+include_once("formulaType.php");
 class formulaCategory{
     public $description;
     public $type;

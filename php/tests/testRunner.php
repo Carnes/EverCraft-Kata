@@ -1,5 +1,6 @@
 <?php
 include "testInterface.php";
+set_include_path(dirname(__FILE__)."/../main");
 
 function includeDirectory($rootDir){
     $files = scandir($rootDir);

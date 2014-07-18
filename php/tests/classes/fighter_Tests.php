@@ -1,8 +1,8 @@
 <?php
-include_once ("../main/combat.php");
-include_once ("../main/character.php");
-include_once ("../main/availableClasses.php");
-include_once ("../main/fighterClass.php");
+include_once ("combat.php");
+include_once ("character/character.php");
+include_once ("character/classes/availableClasses.php");
+include_once ("character/classes/fighterClass.php");
 
 
 class fighter_Tests implements testInterface

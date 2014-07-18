@@ -1,7 +1,8 @@
 <?php
-include_once ("../main/character.php");
-include_once ("../main/availableClasses.php");
-include_once ("../main/paladinClass.php");
+include_once ("combat.php");
+include_once ("character/character.php");
+include_once ("character/classes/availableClasses.php");
+include_once ("character/classes/paladinClass.php");
 
 class paladin_Tests implements testInterface
 {

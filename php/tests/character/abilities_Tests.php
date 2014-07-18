@@ -1,4 +1,6 @@
 <?php
+include_once("character/character.php");
+
 class abilities_Tests implements testInterface
 {
     private $character;

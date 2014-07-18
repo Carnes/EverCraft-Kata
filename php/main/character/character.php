@@ -1,6 +1,6 @@
 <?php
-include_once("availableFormulaCategories.php");
-include_once("formula.php");
+include_once("formula/availableFormulaCategories.php");
+include_once("formula/formula.php");
 class character
 {
     private $alignment;

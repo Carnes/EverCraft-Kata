@@ -1,7 +1,8 @@
 <?php
-include_once ("../main/character.php");
-include_once ("../main/availableClasses.php");
-include_once ("../main/warMonkClass.php");
+include_once ("combat.php");
+include_once ("character/character.php");
+include_once ("character/classes/availableClasses.php");
+include_once ("character/classes/warMonkClass.php");
 
 class warMonk_Tests implements testInterface
 {

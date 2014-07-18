@@ -1,6 +1,6 @@
 <?php
-include_once ("../main/character.php");
-include_once ("../main/alignment.php");
+include_once ("character/character.php");
+include_once ("character/alignment.php");
 
 class hitPoints_Tests implements testInterface
 {
