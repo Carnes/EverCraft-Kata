@@ -43,7 +43,7 @@ class character
             case "strengthModifier":
                 return $this->getStrengthAbilityModifier();
             case "dexterityModifier":
-                return $this->abilityModifier($this->dexterity);
+                return $this->getDexterityAbilityModifier();
             case "constitutionModifier":
                 return $this->getConstitutionAbilityModifier();
             case "wisdomModifier":
@@ -274,5 +274,12 @@ class character
         $conMod = $this->abilityModifier($this->constitution);
         $conMod += $this->solveFormulaCategory(availableFormulaCategories::$ConstitutionModifierBonus);
         return $conMod;
+    }
+
+    private function getDexterityAbilityModifier()
+    {
+        $dexMod = $this->abilityModifier($this->dexterity);
+        $dexMod += $this->solveFormulaCategory(availableFormulaCategories::$DexterityModifierBonus);
+        return $dexMod;
     }
 }

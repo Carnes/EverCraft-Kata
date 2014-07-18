@@ -14,11 +14,11 @@ class elfRace implements ICharacterRace
         if(self::$formulas==null)
         {
             self::$formulas = array();
-//            self::$formulas[] = new formula(
-//                availableFormulaCategories::$ConstitutionModifierBonus,
-//                function(){return 1;},
-//                "Dwarf gets +1 to Constitution modifier"
-//            );
+            self::$formulas[] = new formula(
+                availableFormulaCategories::$DexterityModifierBonus,
+                function(){return 1;},
+                "Elf gets +1 to Dexterity modifier"
+            );
 
         }
     }

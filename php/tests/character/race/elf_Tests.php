@@ -1,5 +1,6 @@
 <?php
 include_once("character/races/elfRace.php");
+
 class elf_Tests implements testInterface
 {
     public function initialize(){}
@@ -32,5 +33,19 @@ class elf_Tests implements testInterface
 
         //Assert
         assert($c->race instanceof elfRace);
+    }
+
+    public function ItGivesPlus1DexterityModifier()
+    {
+        //Arrange
+        $c = new character();
+        $defaultDexMod = $c->dexterityModifier;
+
+        //Act
+        $c->race = new elfRace();
+        $elfDexMod = $c->dexterityModifier;
+
+        //Assert
+        assert($elfDexMod == $defaultDexMod + 1);
     }
 }
