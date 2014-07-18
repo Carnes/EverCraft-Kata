@@ -1,6 +1,7 @@
 <?php
 include_once("formula/availableFormulaCategories.php");
 include_once("characterBaseFormulas.php");
+include_once("races/humanRace.php");
 class character
 {
     private $alignment;
@@ -17,6 +18,7 @@ class character
     public $charisma;
     public $experience;
     public $class;
+    public $race;
 
     public function __construct(){
         $this->class = array();
@@ -29,6 +31,7 @@ class character
         $this->charisma = 10;
         $this->experience = 0;
         $this->hitPoints = $this->getMaxHitPoints();
+        $this->race = new humanRace();
     }
 
     public function __get($property){

@@ -7,9 +7,12 @@ function includeDirectory($rootDir){
     if($files===false)
         return;
     foreach($files as $file) {
-        if($file != "." && $file != ".." && is_dir($file))
+        if($file == "." || $file == "..")
+            continue;
+        if(is_dir($rootDir."/".$file))
             includeDirectory($rootDir."/".$file);
-        else{
+        else
+        {
             $pos = stripos($file, "_tests.php");
             if($pos!==false)
                 include($rootDir."/".$file);

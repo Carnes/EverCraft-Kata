@@ -1,6 +1,7 @@
 <?php
 include_once ("character/character.php");
 include_once ("character/alignment.php");
+include_once ("character/races/humanRace.php");
 
 class character_Tests implements testInterface
 {
