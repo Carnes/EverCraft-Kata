@@ -103,7 +103,7 @@ class character
     {
         $damage = $this->getAttackDamagePerLevel();
         $damage += $this->getAttackDamageBonus($defender);
-        if($this->wieldedWeapon instanceof IWeapon)
+        if($this->wieldedWeapon instanceof Weapon\IWeapon)
             $damage += $this->wieldedWeapon->getDamage();
 
         if($attackRole >= 20 - $this->getCriticalHitRoleBonus($defender))

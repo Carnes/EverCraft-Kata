@@ -2,7 +2,6 @@
 include_once ("character/character.php");
 include_once ("character/alignment.php");
 include_once ("character/races/humanRace.php");
-include_once ("weapons/longSword.php");
 
 class character_Tests implements testInterface
 {
@@ -85,13 +84,14 @@ class character_Tests implements testInterface
         //Arrange
         $c = new character();
         $noWeapon = $c->wieldedWeapon;
+        $longsword = Weapon\weaponFactory::startForge()->withDamage(5)->withName("longsword")->getWeapon();
 
         //Act
-        $c->wieldedWeapon = new longsword();
+        $c->wieldedWeapon = $longsword;
         $withWeapon = $c->wieldedWeapon;
 
         //Assert
         assert($noWeapon == null);
-        assert($withWeapon instanceof longSword);
+        assert($withWeapon instanceof Weapon\IWeapon);
     }
 }
