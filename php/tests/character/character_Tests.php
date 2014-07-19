@@ -2,6 +2,7 @@
 include_once ("character/character.php");
 include_once ("character/alignment.php");
 include_once ("character/races/humanRace.php");
+include_once ("weapons/longSword.php");
 
 class character_Tests implements testInterface
 {
@@ -77,5 +78,20 @@ class character_Tests implements testInterface
         $c = new character();
         $c->addClass("character");
         assert(count($c->class) == 0);
+    }
+
+    public function ItCanWieldAWeapon()
+    {
+        //Arrange
+        $c = new character();
+        $noWeapon = $c->wieldedWeapon;
+
+        //Act
+        $c->wieldedWeapon = new longsword();
+        $withWeapon = $c->wieldedWeapon;
+
+        //Assert
+        assert($noWeapon == null);
+        assert($withWeapon instanceof longSword);
     }
 }

@@ -19,6 +19,7 @@ class character
     public $charisma;
     public $experience;
     public $class;
+    public $wieldedWeapon;
 
     public function __construct(){
         $this->class = array();
@@ -100,9 +101,14 @@ class character
 
     public function getAttackDamage($defender, $attackRole)
     {
-        $damage = $this->getAttackDamagePerLevel() + $this->getAttackDamageBonus($defender);
+        $damage = $this->getAttackDamagePerLevel();
+        $damage += $this->getAttackDamageBonus($defender);
+        if($this->wieldedWeapon instanceof IWeapon)
+            $damage += $this->wieldedWeapon->getDamage();
+
         if($attackRole >= 20 - $this->getCriticalHitRoleBonus($defender))
             $damage *= $this->getCriticalHitMultiplier($defender);
+
         if($damage<1)
             $damage=1;
         return $damage;
