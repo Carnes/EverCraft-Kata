@@ -1,13 +1,13 @@
 <?php
-namespace Weapon;
 include_once("weapon.php");
+include_once("formula.php");
 class weaponFactory
 {
     private $weapon;
 
     private function __construct($weapon = null){
         if($weapon == null)
-            $this->weapon = new weapon();
+            $this->weapon = new Weapon\weapon();
         else
             $this->weapon = $weapon;
     }
@@ -30,7 +30,12 @@ class weaponFactory
 
     public function withDamage($dmgAmount)
     {
-        $this->weapon->damage = $dmgAmount;
+        $formula = new Weapon\formula(
+            function()use($dmgAmount){ return $dmgAmount; },
+            ($dmgAmount >0 ? "+": "").$dmgAmount." damage"
+        );
+
+        $this->weapon->formulas[] = $formula;
         return $this;
     }
 

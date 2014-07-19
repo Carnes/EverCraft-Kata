@@ -8,7 +8,7 @@ class longSword_Tests implements testInterface
 
     public function ItImplementsIWeapon()
     {
-        $longsword = Weapon\weaponFactory::startForge()->getWeapon();
+        $longsword = weaponFactory::startForge()->getWeapon();
 
         $interfaces = class_implements($longsword);
 
@@ -17,7 +17,7 @@ class longSword_Tests implements testInterface
 
     public function ItHasAName()
     {
-        $longsword = Weapon\weaponFactory::startForge()->withDamage(5)->withName("longsword")->getWeapon();
+        $longsword = weaponFactory::startForge()->withDamage(5)->withName("longsword")->getWeapon();
 
         assert($longsword->name == "longsword");
     }
@@ -25,7 +25,7 @@ class longSword_Tests implements testInterface
     public function ItDoes5Damage()
     {
         //Arrange
-        $longsword = Weapon\weaponFactory::startForge()->withDamage(5)->getWeapon();
+        $longsword = weaponFactory::startForge()->withDamage(5)->getWeapon();
 
         $attacker = new character();
         $defender = new character();
