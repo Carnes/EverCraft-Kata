@@ -4,23 +4,35 @@ include_once ("IWeapon.php");
 class weapon implements IWeapon
 {
     public $name;
-    public $formulas;
+    public $damageFormulas;
+    public $attackFormulas;
 
     public function __construct()
     {
-        $this->formulas=array();
+        $this->damageFormulas=array();
+        $this->attackFormulas=array();
         $this->name = "Unknown";
     }
 
     public function getDamage()
     {
-        $dmg = 0;
-        foreach($this->formulas as $formula)
+        return $this->processFormulas($this->damageFormulas);
+    }
+
+    public function getAttack()
+    {
+        return $this->processFormulas($this->attackFormulas);
+    }
+
+    private function processFormulas($formulas)
+    {
+        $val = 0;
+        foreach($formulas as $formula)
         {
             $result = $formula->execute();
             if(is_numeric($result))
-                $dmg += $result;
+                $val += $result;
         }
-        return $dmg;
+        return $val;
     }
 }

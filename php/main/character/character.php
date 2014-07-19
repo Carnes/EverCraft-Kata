@@ -116,7 +116,11 @@ class character
 
     public function getAttackRoleBonus($defender)
     {
-        return $this->solveFormulaCategory(availableFormulaCategories::$AttackRoleBonus, $defender);
+        $bonus = 0;
+        $bonus += $this->solveFormulaCategory(availableFormulaCategories::$AttackRoleBonus, $defender);
+        if($this->wieldedWeapon instanceof Weapon\IWeapon)
+            $bonus += $this->wieldedWeapon->getAttack();
+        return $bonus;
     }
 
     public function getDefendingArmorClass($attacker)

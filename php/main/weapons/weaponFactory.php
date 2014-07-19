@@ -35,7 +35,18 @@ class weaponFactory
             ($dmgAmount >0 ? "+": "").$dmgAmount." damage"
         );
 
-        $this->weapon->formulas[] = $formula;
+        $this->weapon->damageFormulas[] = $formula;
+        return $this;
+    }
+
+    public function withAttack($atkAmount)
+    {
+        $formula = new Weapon\formula(
+            function()use($atkAmount){ return $atkAmount; },
+            ($atkAmount >0 ? "+": "").$atkAmount." attack"
+        );
+
+        $this->weapon->attackFormulas[] = $formula;
         return $this;
     }
 
