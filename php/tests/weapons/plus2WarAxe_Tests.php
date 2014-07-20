@@ -6,7 +6,7 @@ class plus2WarAxe_Tests implements testInterface
 {
     private $axe;
     public function initialize() {
-        $this->axe = weaponFactory::startForge()->withDamage(8)->withAttack(2)->withName("+2 war axe")->getWeapon();
+        $this->axe = weaponFactory::startForge()->withDamage(8)->withAttack(2)->withNonRogueCriticalMultiplier(3)->withRogueCriticalMultiplier(4)->withName("+2 war axe")->getWeapon();
     }
 
     public function ItIsAWeapon()
@@ -41,5 +41,42 @@ class plus2WarAxe_Tests implements testInterface
 
         //Assert
         assert($isAttackSuccessful === true);
+    }
+
+    public function ItDoesCriticalDamageOfDamageTimes3()
+    {
+        //Arrange
+        $attacker = new character();
+        $attacker->wieldedWeapon = $this->axe;
+        $defender = new character();
+        $defender->experience += 5000;
+        $roll = 20;
+        $preHP  = $defender->hitPoints;
+
+        //Act
+        $attacker->attack($defender, $roll);
+        $damageDone = $preHP - $defender->hitPoints;
+
+        //Assert
+        assert($damageDone == 26);
+    }
+
+    public function ItDoesCriticalDamageOfDamageTimes4ForRogue()
+    {
+        //Arrange
+        $attacker = new character();
+        $attacker->wieldedWeapon = $this->axe;
+        $attacker->addClass(availableClasses::Rogue);
+        $defender = new character();
+        $defender->experience += 5000;
+        $roll = 20;
+        $preHP  = $defender->hitPoints;
+
+        //Act
+        $attacker->attack($defender, $roll);
+        $damageDone = $preHP - $defender->hitPoints;
+
+        //Assert
+        assert($damageDone == 3+32);
     }
 }

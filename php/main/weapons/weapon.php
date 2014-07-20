@@ -6,11 +6,13 @@ class weapon implements IWeapon
     public $name;
     public $damageFormulas;
     public $attackFormulas;
+    public $criticalFormulas;
 
     public function __construct()
     {
         $this->damageFormulas=array();
         $this->attackFormulas=array();
+        $this->criticalFormulas=array();
         $this->name = "Unknown";
     }
 
@@ -24,12 +26,18 @@ class weapon implements IWeapon
         return $this->processFormulas($this->attackFormulas);
     }
 
-    private function processFormulas($formulas)
+    public function getCriticalMultiplier($wielder)
+    {
+        $multiplier = $this->processFormulas($this->criticalFormulas, $wielder);
+        return ($multiplier == 0) ? 1 : $multiplier;
+    }
+
+    private function processFormulas($formulas, $wielder = null)
     {
         $val = 0;
         foreach($formulas as $formula)
         {
-            $result = $formula->execute();
+            $result = $formula->execute([$wielder]);
             if(is_numeric($result))
                 $val += $result;
         }

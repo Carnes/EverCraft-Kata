@@ -50,6 +50,39 @@ class weaponFactory
         return $this;
     }
 
+    public function withCriticalMultiplier($multiplier)
+    {
+        $formula = new Weapon\formula(
+            function()use($multiplier){ return $multiplier; },
+            ($multiplier >0 ? "+": "").$multiplier." critical damage multiplier"
+        );
+
+        $this->weapon->criticalFormulas[] = $formula;
+        return $this;
+    }
+
+    public function withNonRogueCriticalMultiplier($multiplier)
+    {
+        $formula = new Weapon\formula(
+            function($wielder)use($multiplier){ $isRogue=false; foreach($wielder->class as $class) {if($class instanceof rogueClass) {$isRogue=true; break;} } if(!$isRogue) return $multiplier; },
+            ($multiplier >0 ? "+": "").$multiplier." critical damage multiplier for non-Rogue class"
+        );
+
+        $this->weapon->criticalFormulas[] = $formula;
+        return $this;
+    }
+
+    public function withRogueCriticalMultiplier($multiplier)
+    {
+        $formula = new Weapon\formula(
+            function($wielder)use($multiplier){ foreach($wielder->class as $class) if($class instanceof rogueClass) return $multiplier; },
+            ($multiplier >0 ? "+": "").$multiplier." critical damage multiplier for Rogue class"
+        );
+
+        $this->weapon->criticalFormulas[] = $formula;
+        return $this;
+    }
+
     public function getWeapon()
     {
         return $this->weapon;

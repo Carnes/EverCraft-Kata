@@ -2,6 +2,7 @@
 include_once("formula/availableFormulaCategories.php");
 include_once("characterBaseFormulas.php");
 include_once("races/humanRace.php");
+include_once("classes/availableClasses.php");
 class character
 {
     private $alignment;
@@ -103,11 +104,19 @@ class character
     {
         $damage = $this->getAttackDamagePerLevel();
         $damage += $this->getAttackDamageBonus($defender);
+        $weaponDamage = 0;
+
         if($this->wieldedWeapon instanceof Weapon\IWeapon)
-            $damage += $this->wieldedWeapon->getDamage();
+            $weaponDamage += $this->wieldedWeapon->getDamage();
 
         if($attackRole >= 20 - $this->getCriticalHitRoleBonus($defender))
+        {
             $damage *= $this->getCriticalHitMultiplier($defender);
+            if($this->wieldedWeapon instanceof Weapon\IWeapon)
+                $weaponDamage *= $this->wieldedWeapon->getCriticalMultiplier($this);
+        }
+
+        $damage += $weaponDamage;
 
         if($damage<1)
             $damage=1;
