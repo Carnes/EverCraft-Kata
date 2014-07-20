@@ -5,7 +5,7 @@ class elvenLongSword_Tests implements testInterface
     public function initialize(){
         $this->els = weaponFactory::startForge()
             ->withName("Glamdring")
-            ->withSubType(\Weapon\itemSubType::Longsword)
+            ->withSubType(\Equipment\weaponSubType::$Longsword)
             ->withDamage(6)
             ->withDamageForRace(2, "Elf")
             ->withDamageAgainstRace(2, "Orc")
@@ -13,21 +13,27 @@ class elvenLongSword_Tests implements testInterface
             ->withAttackForRace(2, "Elf")
             ->withAttackAgainstRace(2, "Orc")
             ->withAttackForRaceAgainstRace(1, "Elf", "Orc")
-            ->getWeapon();
+            ->withType(\Equipment\itemType::$Weapon)
+            ->getEquipment();
     }
 
-    public function ItIsAWeapon()
+    public function ItIsAPieceOfEquipment()
     {
         //Arrange / Act
         $interfaces = class_implements($this->els);
 
         //Assert
-        assert(in_array("Weapon\IWeapon",$interfaces));
+        assert(in_array("Equipment\IEquipment",$interfaces));
+    }
+
+    public function ItIsAWeapon()
+    {
+        assert($this->els->type == \Equipment\itemType::$Weapon);
     }
 
     public function ItIsALongsword()
     {
-        assert($this->els->subType == \Weapon\itemSubType::Longsword);
+        assert($this->els->subType == \Equipment\weaponSubType::$Longsword);
     }
 
     public function ItHasName()

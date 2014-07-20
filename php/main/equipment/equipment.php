@@ -1,18 +1,29 @@
 <?php
-namespace Weapon;
-include_once ("IWeapon.php");
+namespace Equipment;
+include_once ("IEquipment.php");
+
+class itemType
+{
+    public static $Unknown = "unknown";
+    public static $Weapon = "weapon";
+}
 
 class itemSubType
 {
-    const Unknown = "unknown";
-    const WarAxe = "war axe";
-    const Nunchucks = "nunchaku";
-    const Longsword = "longsword";
+    public static $Unknown = "unknown";
 }
 
-class weapon implements IWeapon
+class weaponSubType
+{
+    public static $WarAxe = "war axe";
+    public static $Nunchucks = "nunchaku";
+    public static $Longsword = "longsword";
+}
+
+class equipment implements IEquipment
 {
     public $name;
+    public $type;
     public $subType;
     private $formulas;
 
@@ -20,7 +31,8 @@ class weapon implements IWeapon
     {
         $this->formulas=array();
         $this->name = "Unknown";
-        $this->subType = itemSubType::Unknown;
+        $this->subType = itemSubType::$Unknown;
+        $this->type = itemType::$Unknown;
     }
 
     public function addFormula($formula)

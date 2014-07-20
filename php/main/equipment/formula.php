@@ -1,5 +1,5 @@
 <?php
-namespace Weapon;
+namespace Equipment;
 
 class formulaType
 {

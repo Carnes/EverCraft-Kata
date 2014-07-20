@@ -106,13 +106,13 @@ class character
         $damage += $this->getAttackDamageBonus($defender);
         $weaponDamage = 0;
 
-        if($this->wieldedWeapon instanceof Weapon\IWeapon)
+        if($this->wieldedWeapon instanceof Equipment\IEquipment)
             $weaponDamage += $this->wieldedWeapon->getDamage($this, $defender);
 
         if($attackRole >= 20 - $this->getCriticalHitRoleBonus($defender))
         {
             $damage *= $this->getCriticalHitMultiplier($defender);
-            if($this->wieldedWeapon instanceof Weapon\IWeapon)
+            if($this->wieldedWeapon instanceof Equipment\IEquipment)
                 $weaponDamage *= $this->wieldedWeapon->getCriticalMultiplier($this, $defender);
         }
 
@@ -127,7 +127,7 @@ class character
     {
         $bonus = 0;
         $bonus += $this->solveFormulaCategory(availableFormulaCategories::$AttackRoleBonus, $defender);
-        if($this->wieldedWeapon instanceof Weapon\IWeapon)
+        if($this->wieldedWeapon instanceof Equipment\IEquipment)
             $bonus += $this->wieldedWeapon->getAttack($this, $defender);
         return $bonus;
     }

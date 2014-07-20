@@ -1,6 +1,6 @@
 <?php
-namespace Weapon;
-interface IWeapon
+namespace Equipment;
+interface IEquipment
 {
     function getDamage($wielder, $target);
     function getAttack($wielder, $target);

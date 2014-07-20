@@ -1,5 +1,5 @@
 <?php
-include_once("weapons/weaponFactory.php");
+include_once("equipment/equipmentFactory.php");
 include_once("character/character.php");
 
 class plus2WarAxe_Tests implements testInterface
@@ -12,22 +12,28 @@ class plus2WarAxe_Tests implements testInterface
             ->withCriticalMultiplier(3)
             ->withRogueCriticalMultiplier(4)
             ->withName("+2 war axe")
-            ->withSubType(\Weapon\itemSubType::WarAxe)
-            ->getWeapon();
+            ->withSubType(\Equipment\weaponSubType::$WarAxe)
+            ->withType(\Equipment\itemType::$Weapon)
+            ->getEquipment();
     }
 
-    public function ItIsAWeapon()
+    public function ItIsAPieceOfEquipment()
     {
         //Arrange / Act
         $interfaces = class_implements($this->axe);
 
         //Assert
-        assert(in_array("Weapon\IWeapon",$interfaces));
+        assert(in_array("Equipment\IEquipment",$interfaces));
+    }
+
+    public function ItIsAWeapon()
+    {
+        assert($this->axe->type == \Equipment\itemType::$Weapon);
     }
 
     public function ItIsAWarAxe()
     {
-        assert($this->axe->subType == \Weapon\itemSubType::WarAxe);
+        assert($this->axe->subType == \Equipment\weaponSubType::$WarAxe);
     }
 
     public function ItHasName()

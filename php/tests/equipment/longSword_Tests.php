@@ -1,6 +1,6 @@
 <?php
-include_once("weapons/weaponFactory.php");
-include_once("weapons/IWeapon.php");
+include_once("equipment/equipmentFactory.php");
+include_once("equipment/IEquipment.php");
 
 class longSword_Tests implements testInterface
 {
@@ -10,15 +10,23 @@ class longSword_Tests implements testInterface
         $this->longsword = weaponFactory::startForge()
             ->withDamage(5)
             ->withName("longsword")
-            ->withSubType(\Weapon\itemSubType::Longsword)
-            ->getWeapon();
+            ->withSubType(\Equipment\weaponSubType::$Longsword)
+            ->withType(\Equipment\itemType::$Weapon)
+            ->getEquipment();
     }
 
-    public function ItImplementsIWeapon()
+    public function ItIsAPieceOfEquipment()
     {
+        //Arrange / Act
         $interfaces = class_implements($this->longsword);
 
-        assert(in_array("Weapon\IWeapon",$interfaces));
+        //Assert
+        assert(in_array("Equipment\IEquipment",$interfaces));
+    }
+
+    public function ItIsAWeapon()
+    {
+        assert($this->longsword->type == \Equipment\itemType::$Weapon);
     }
 
     public function ItHasAName()
@@ -28,7 +36,7 @@ class longSword_Tests implements testInterface
 
     public function ItIsALongsword()
     {
-        assert($this->longsword->subType == \Weapon\itemSubType::Longsword);
+        assert($this->longsword->subType == \Equipment\weaponSubType::$Longsword);
     }
 
     public function ItDoes5Damage()

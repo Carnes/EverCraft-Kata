@@ -5,24 +5,30 @@ class nunChucks_Tests implements testInterface
     public function initialize(){
         $this->nunChucks = weaponFactory::startForge()
             ->withName("nun chucks")
-            ->withSubType(\Weapon\itemSubType::Nunchucks)
+            ->withSubType(\Equipment\weaponSubType::$Nunchucks)
+            ->withType(\Equipment\itemType::$Weapon)
             ->withDamage(6)
             ->withAttackForNonClass(-4, "War Monk")
-            ->getWeapon();
+            ->getEquipment();
     }
 
-    public function ItIsAWeapon()
+    public function ItIsAPieceOfEquipment()
     {
         //Arrange / Act
         $interfaces = class_implements($this->nunChucks);
 
         //Assert
-        assert(in_array("Weapon\IWeapon",$interfaces));
+        assert(in_array("Equipment\IEquipment",$interfaces));
+    }
+
+    public function ItIsAWeapon()
+    {
+        assert($this->nunChucks->type == \Equipment\itemType::$Weapon);
     }
 
     public function ItIsNunChucks()
     {
-        assert($this->nunChucks->subType == \Weapon\itemSubType::Nunchucks);
+        assert($this->nunChucks->subType == \Equipment\weaponSubType::$Nunchucks);
     }
 
     public function ItHasName()
