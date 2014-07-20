@@ -32,10 +32,11 @@ class weaponFactory
     {
         $formula = new Weapon\formula(
             function()use($dmgAmount){ return $dmgAmount; },
-            ($dmgAmount >0 ? "+": "").$dmgAmount." damage"
+            ($dmgAmount >0 ? "+": "").$dmgAmount." damage",
+            \Weapon\formulaCategories::$Damage
         );
 
-        $this->weapon->damageFormulas[] = $formula;
+        $this->weapon->addFormula($formula);
         return $this;
     }
 
@@ -43,10 +44,11 @@ class weaponFactory
     {
         $formula = new Weapon\formula(
             function()use($atkAmount){ return $atkAmount; },
-            ($atkAmount >0 ? "+": "").$atkAmount." attack"
+            ($atkAmount >0 ? "+": "").$atkAmount." attack",
+            \Weapon\formulaCategories::$Attack
         );
 
-        $this->weapon->attackFormulas[] = $formula;
+        $this->weapon->addFormula($formula);
         return $this;
     }
 
@@ -54,21 +56,11 @@ class weaponFactory
     {
         $formula = new Weapon\formula(
             function()use($multiplier){ return $multiplier; },
-            ($multiplier >0 ? "+": "").$multiplier." critical damage multiplier"
+            ($multiplier >0 ? "+": "").$multiplier." critical damage multiplier",
+            \Weapon\formulaCategories::$CriticalMultiplier
         );
 
-        $this->weapon->criticalFormulas[] = $formula;
-        return $this;
-    }
-
-    public function withNonRogueCriticalMultiplier($multiplier)
-    {
-        $formula = new Weapon\formula(
-            function($wielder)use($multiplier){ $isRogue=false; foreach($wielder->class as $class) {if($class instanceof rogueClass) {$isRogue=true; break;} } if(!$isRogue) return $multiplier; },
-            ($multiplier >0 ? "+": "").$multiplier." critical damage multiplier for non-Rogue class"
-        );
-
-        $this->weapon->criticalFormulas[] = $formula;
+        $this->weapon->addFormula($formula);
         return $this;
     }
 
@@ -76,10 +68,11 @@ class weaponFactory
     {
         $formula = new Weapon\formula(
             function($wielder)use($multiplier){ foreach($wielder->class as $class) if($class instanceof rogueClass) return $multiplier; },
-            ($multiplier >0 ? "+": "").$multiplier." critical damage multiplier for Rogue class"
+            ($multiplier >0 ? "+": "").$multiplier." critical damage multiplier for Rogues",
+            \Weapon\formulaCategories::$CriticalMultiplier
         );
 
-        $this->weapon->criticalFormulas[] = $formula;
+        $this->weapon->addFormula($formula);
         return $this;
     }
 

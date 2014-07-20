@@ -6,7 +6,7 @@ class plus2WarAxe_Tests implements testInterface
 {
     private $axe;
     public function initialize() {
-        $this->axe = weaponFactory::startForge()->withDamage(8)->withAttack(2)->withNonRogueCriticalMultiplier(3)->withRogueCriticalMultiplier(4)->withName("+2 war axe")->getWeapon();
+        $this->axe = weaponFactory::startForge()->withDamage(8)->withAttack(2)->withCriticalMultiplier(3)->withRogueCriticalMultiplier(4)->withName("+2 war axe")->getWeapon();
     }
 
     public function ItIsAWeapon()
