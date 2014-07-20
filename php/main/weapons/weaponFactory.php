@@ -28,6 +28,12 @@ class weaponFactory
         return $this;
     }
 
+    public function withSubType($type)
+    {
+        $this->weapon->subType = $type;
+        return $this;
+    }
+
     public function withDamage($dmgAmount)
     {
         $formula = new Weapon\formula(

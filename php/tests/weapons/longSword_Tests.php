@@ -4,33 +4,40 @@ include_once("weapons/IWeapon.php");
 
 class longSword_Tests implements testInterface
 {
-    public function initialize() {}
+    private $longsword;
+
+    public function initialize() {
+        $this->longsword = weaponFactory::startForge()
+            ->withDamage(5)
+            ->withName("longsword")
+            ->withSubType(\Weapon\itemSubType::Longsword)
+            ->getWeapon();
+    }
 
     public function ItImplementsIWeapon()
     {
-        $longsword = weaponFactory::startForge()->getWeapon();
-
-        $interfaces = class_implements($longsword);
+        $interfaces = class_implements($this->longsword);
 
         assert(in_array("Weapon\IWeapon",$interfaces));
     }
 
     public function ItHasAName()
     {
-        $longsword = weaponFactory::startForge()->withDamage(5)->withName("longsword")->getWeapon();
+        assert($this->longsword->name == "longsword");
+    }
 
-        assert($longsword->name == "longsword");
+    public function ItIsALongsword()
+    {
+        assert($this->longsword->subType == \Weapon\itemSubType::Longsword);
     }
 
     public function ItDoes5Damage()
     {
         //Arrange
-        $longsword = weaponFactory::startForge()->withDamage(5)->getWeapon();
-
         $attacker = new character();
         $defender = new character();
         $defender->experience+=10000;
-        $attacker->wieldedWeapon = $longsword;
+        $attacker->wieldedWeapon = $this->longsword;
         $preHP = $defender->hitPoints;
         $attackBaseDmg = 1;
 

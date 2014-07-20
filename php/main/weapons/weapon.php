@@ -1,15 +1,26 @@
 <?php
 namespace Weapon;
 include_once ("IWeapon.php");
+
+class itemSubType
+{
+    const Unknown = "unknown";
+    const WarAxe = "war axe";
+    const Nunchucks = "nunchaku";
+    const Longsword = "longsword";
+}
+
 class weapon implements IWeapon
 {
     public $name;
+    public $subType;
     private $formulas;
 
     public function __construct()
     {
         $this->formulas=array();
         $this->name = "Unknown";
+        $this->subType = itemSubType::Unknown;
     }
 
     public function addFormula($formula)
