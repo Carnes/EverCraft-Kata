@@ -40,11 +40,83 @@ class weaponFactory
         return $this;
     }
 
+    public function withDamageForRace($dmgAmount, $raceName)
+    {
+        $formula = new Weapon\formula(
+            function($wielder)use($dmgAmount, $raceName){ if($wielder != null && $wielder->race->getName() == $raceName) return $dmgAmount; },
+            ($dmgAmount >0 ? "+": "").$dmgAmount." damage when wielded by ".$raceName,
+            \Weapon\formulaCategories::$Damage
+        );
+
+        $this->weapon->addFormula($formula);
+        return $this;
+    }
+
+    public function withDamageAgainstRace($dmgAmount, $raceName)
+    {
+        $formula = new Weapon\formula(
+            function($wielder, $target)use($dmgAmount, $raceName){ if($target != null && $target->race->getName() == $raceName) return $dmgAmount; },
+            ($dmgAmount >0 ? "+": "").$dmgAmount." damage when wielded against ".$raceName,
+            \Weapon\formulaCategories::$Damage
+        );
+
+        $this->weapon->addFormula($formula);
+        return $this;
+    }
+
+    public function withDamageForRaceAndAgainstRace($dmgAmount, $forRaceName, $againstRaceName)
+    {
+        $formula = new Weapon\formula(
+            function($wielder, $target)use($dmgAmount, $forRaceName, $againstRaceName){ if($target == null || $wielder == null) return; if($target->race->getName() == $againstRaceName && $wielder->race->getName()== $forRaceName) return $dmgAmount; },
+            ($dmgAmount >0 ? "+": "").$dmgAmount." damage when wielded by ".$forRaceName." and against ".$againstRaceName,
+            \Weapon\formulaCategories::$Damage
+        );
+
+        $this->weapon->addFormula($formula);
+        return $this;
+    }
+
     public function withAttack($atkAmount)
     {
         $formula = new Weapon\formula(
             function()use($atkAmount){ return $atkAmount; },
             ($atkAmount >0 ? "+": "").$atkAmount." attack",
+            \Weapon\formulaCategories::$Attack
+        );
+
+        $this->weapon->addFormula($formula);
+        return $this;
+    }
+
+    public function withAttackForRace($atkAmount, $raceName)
+    {
+        $formula = new Weapon\formula(
+            function($wielder)use($atkAmount, $raceName){ if($wielder != null && $wielder->race->getName() == $raceName) return $atkAmount; },
+            ($atkAmount >0 ? "+": "").$atkAmount." attack when wielded by ".$raceName,
+            \Weapon\formulaCategories::$Attack
+        );
+
+        $this->weapon->addFormula($formula);
+        return $this;
+    }
+
+    public function withAttackAgainstRace($atkAmount, $raceName)
+    {
+        $formula = new Weapon\formula(
+            function($wielder, $target)use($atkAmount, $raceName){ if($target != null && $target->race->getName() == $raceName) return $atkAmount; },
+            ($atkAmount >0 ? "+": "").$atkAmount." attack when wielded against ".$raceName,
+            \Weapon\formulaCategories::$Attack
+        );
+
+        $this->weapon->addFormula($formula);
+        return $this;
+    }
+
+    public function withAttackForRaceAgainstRace($atkAmount, $forRaceName, $againstRaceName)
+    {
+        $formula = new Weapon\formula(
+            function($wielder, $target)use($atkAmount, $forRaceName, $againstRaceName){ if($target == null || $wielder == null) return; if($target->race->getName() == $againstRaceName && $wielder->race->getName() == $forRaceName) return $atkAmount; },
+            ($atkAmount >0 ? "+": "").$atkAmount." attack when wielded by ".$forRaceName." against ".$againstRaceName,
             \Weapon\formulaCategories::$Attack
         );
 
@@ -67,7 +139,7 @@ class weaponFactory
     public function withRogueCriticalMultiplier($multiplier)
     {
         $formula = new Weapon\formula(
-            function($wielder)use($multiplier){ foreach($wielder->class as $class) if($class instanceof rogueClass) return $multiplier; },
+            function($wielder)use($multiplier){ if($wielder==null)return; foreach($wielder->class as $class) if($class instanceof rogueClass) return $multiplier; },
             ($multiplier >0 ? "+": "").$multiplier." critical damage multiplier for Rogues",
             \Weapon\formulaCategories::$CriticalMultiplier
         );

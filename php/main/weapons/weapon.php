@@ -18,19 +18,19 @@ class weapon implements IWeapon
             $this->formulas[] = $formula;
     }
 
-    public function getDamage()
+    public function getDamage($wielder = null, $target = null)
     {
-        return $this->processFormulas(formulaCategories::$Damage);
+        return $this->processFormulas(formulaCategories::$Damage, $wielder, $target);
     }
 
-    public function getAttack()
+    public function getAttack($wielder = null, $target = null)
     {
-        return $this->processFormulas(formulaCategories::$Attack);
+        return $this->processFormulas(formulaCategories::$Attack, $wielder, $target);
     }
 
-    public function getCriticalMultiplier($wielder)
+    public function getCriticalMultiplier($wielder = null, $target = null)
     {
-        $multiplier = $this->processFormulas(formulaCategories::$CriticalMultiplier, $wielder);
+        $multiplier = $this->processFormulas(formulaCategories::$CriticalMultiplier, $wielder, $target);
         return ($multiplier == 0) ? 1 : $multiplier;
     }
 
@@ -69,7 +69,7 @@ class weapon implements IWeapon
         return $best;
     }
 
-    private function processFormulas($category, $wielder = null, $target = null)
+    private function processFormulas($category, $wielder, $target)
     {
         $formulas = $this->getFormulasForCategory($category);
         if($category->type == formulaType::Additive)

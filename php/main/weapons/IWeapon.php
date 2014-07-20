@@ -2,7 +2,7 @@
 namespace Weapon;
 interface IWeapon
 {
-    function getDamage();
-    function getAttack();
-    function getCriticalMultiplier($wielder);
+    function getDamage($wielder, $target);
+    function getAttack($wielder, $target);
+    function getCriticalMultiplier($wielder, $target);
 }
