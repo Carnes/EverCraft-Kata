@@ -124,6 +124,18 @@ class weaponFactory
         return $this;
     }
 
+    public function withAttackForNonClass($atkAmount, $className)
+    {
+        $formula = new Weapon\formula(
+            function($wielder)use($atkAmount, $className){ if($wielder != null && $wielder->hasClassName($className)===false) return $atkAmount; },
+            ($atkAmount >0 ? "+": "").$atkAmount." attack when not wielded by ".$className,
+            \Weapon\formulaCategories::$Attack
+        );
+
+        $this->weapon->addFormula($formula);
+        return $this;
+    }
+
     public function withCriticalMultiplier($multiplier)
     {
         $formula = new Weapon\formula(

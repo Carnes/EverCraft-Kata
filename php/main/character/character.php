@@ -159,6 +159,14 @@ class character
         $this->hitPoints+=($postMaxHP - $preMaxHP);
     }
 
+    public function hasClassName($className)
+    {
+        foreach($this->class as $class)
+            if($class->getName() == $className)
+                return true;
+        return false;
+    }
+
     private function getArmorClass($target = null)
     {
         $ac = $this->_armorClass;
