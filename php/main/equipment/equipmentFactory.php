@@ -212,6 +212,18 @@ class equipmentFactory
         return $this;
     }
 
+    public function withDamageReduction($amount)
+    {
+        $formula = new \Equipment\formula(
+            function() use($amount) { return $amount; },
+            "reduces all damage by ".$amount,
+            \Equipment\formulaCategories::$DamageReduction
+        );
+
+        $this->equipment->addFormula($formula);
+        return $this;
+    }
+
     public function getEquipment()
     {
         $e = $this->equipment;

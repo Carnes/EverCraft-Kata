@@ -29,6 +29,7 @@ class formulaCategories
     public static $CriticalMultiplier;
     public static $ArmorClass;
     public static $EquipRestriction;
+    public static $DamageReduction;
 
     public static function init()
     {
@@ -37,6 +38,7 @@ class formulaCategories
         self::$CriticalMultiplier = new formulaCategory(formulaType::BestOf, "Critical damage multiplier");
         self::$ArmorClass = new formulaCategory(formulaType::Additive, "Armor Class");
         self::$EquipRestriction = new formulaCategory(formulaType::HasTrue, "Equipment restriction");
+        self::$DamageReduction = new formulaCategory(formulaType::Additive, "Damage reduction");
     }
 }
 formulaCategories::init();

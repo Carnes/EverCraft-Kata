@@ -56,6 +56,11 @@ class equipment implements IEquipment
         return true;
     }
 
+    public function getDamageReduction($wearer, $attacker)
+    {
+        return $this->processFormulas(formulaCategories::$DamageReduction, $wearer, $attacker);
+    }
+
     public function getDamage($wielder = null, $target = null)
     {
         return $this->processFormulas(formulaCategories::$Damage, $wielder, $target);

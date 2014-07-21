@@ -102,7 +102,10 @@ class character
 
     public function takeDamage($amount)
     {
-        $this->hitPoints-=$amount;
+        if($this->_equipedArmor instanceof \Equipment\IEquipment)
+            $amount-=$this->_equipedArmor->getDamageReduction($this,null);
+        if($amount > 0)
+            $this->hitPoints-=$amount;
     }
 
     public function getAttackDamage($defender, $attackRole)
