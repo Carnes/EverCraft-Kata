@@ -8,6 +8,12 @@ class itemType
     public static $Weapon = "weapon";
     public static $Armor = "armor";
     public static $Shield = "shield";
+    public static $Ring = "ring";
+}
+
+class ringSubType
+{
+    public static $Magic = "magic";
 }
 
 class itemSubType

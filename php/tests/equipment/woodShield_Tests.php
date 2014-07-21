@@ -11,11 +11,11 @@ class woodShield_Tests implements testInterface
             ->getEquipment();
     }
 
-    public function ItIsArmor(){
+    public function ItIsAShield(){
         assert($this->shield->type == \Equipment\itemType::$Shield);
     }
 
-    public function ItIsPlateArmor(){
+    public function ItIsWood(){
         assert($this->shield->subType == \Equipment\shieldSubType::$Wood);
     }
 
@@ -28,13 +28,13 @@ class woodShield_Tests implements testInterface
     {
         //Arrange
         $c = new character();
-        $noArmorAC = $c->armorClass;
+        $noShieldAC = $c->armorClass;
 
         //Act
         $c->equipedShield = $this->shield;
-        $withArmorAC = $c->armorClass;
+        $withShieldAC = $c->armorClass;
 
         //Assert
-        assert($withArmorAC == $noArmorAC + 4);
+        assert($withShieldAC == $noShieldAC + 4);
     }
 }
