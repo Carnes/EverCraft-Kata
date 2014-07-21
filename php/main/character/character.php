@@ -137,6 +137,8 @@ class character
         $bonus += $this->solveFormulaCategory(availableFormulaCategories::$AttackRoleBonus, $defender);
         if($this->wieldedWeapon instanceof Equipment\IEquipment)
             $bonus += $this->wieldedWeapon->getAttack($this, $defender);
+        if($this->_equipedArmor instanceof Equipment\IEquipment)
+            $bonus += $this->_equipedArmor->getAttack($this, $defender);
         return $bonus;
     }
 

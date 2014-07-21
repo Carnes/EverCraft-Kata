@@ -4,9 +4,9 @@ class magicLeatherArmor_Tests implements testInterface
     private $armor;
     public function  initialize() {
         $this->armor  = equipmentFactory::startForge()
-            ->withName("leather armor")
+            ->withName("magic leather armor")
             ->withType(\Equipment\itemType::$Armor)
-            ->withSubType("leather")
+            ->withSubType(\Equipment\armorSubType::$Leather)
             ->withArmorClass(2)
             ->withDamageReduction(2)
             ->getEquipment();
@@ -22,7 +22,7 @@ class magicLeatherArmor_Tests implements testInterface
 
     public function ItHasAName()
     {
-        assert($this->armor->name == "leather armor");
+        assert($this->armor->name == "magic leather armor");
     }
 
     public function ItGivesPlus2AC()

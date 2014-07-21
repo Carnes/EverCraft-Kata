@@ -184,6 +184,18 @@ class equipmentFactory
         return $this;
     }
 
+    public function withArmorClassForRace($amount, $raceName)
+    {
+        $formula = new \Equipment\formula(
+            function($wearer) use($amount, $raceName) { if($wearer==null) return; if($wearer->race->getName()==$raceName) return $amount; },
+            ($amount >0 ? "+": "").$amount." armor class for ".$raceName." race",
+            \Equipment\formulaCategories::$ArmorClass
+        );
+
+        $this->equipment->addFormula($formula);
+        return $this;
+    }
+
     public function withRestrictionForOnlyTheseClasses($arrayOfClassNames)
     {
         if(!is_array($arrayOfClassNames))

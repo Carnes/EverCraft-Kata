@@ -25,6 +25,7 @@ class armorSubType
 {
     public static $Plate = "plate";
     public static $Leather = "leather";
+    public static $ChainMail = "chainmail";
 }
 
 class equipment implements IEquipment
