@@ -32,7 +32,7 @@ class magicLeatherArmor_Tests implements testInterface
         $noArmorAC = $c->armorClass;
 
         //Act
-        $c->equipedArmor = $this->armor;
+        $c->equip($this->armor);
         $withArmorAC = $c->armorClass;
 
         //Assert

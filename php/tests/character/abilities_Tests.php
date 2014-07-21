@@ -9,16 +9,6 @@ class abilities_Tests implements testInterface
         $this->character = new character();
     }
 
-    public function ItHasAbilities()
-    {
-        assert(property_exists($this->character, "strength"));
-        assert(property_exists($this->character, "dexterity"));
-        assert(property_exists($this->character, "constitution"));
-        assert(property_exists($this->character, "wisdom"));
-        assert(property_exists($this->character, "intelligence"));
-        assert(property_exists($this->character, "charisma"));
-    }
-
     public function ItDefaultsAbilitiesTo10()
     {
         assert($this->character->strength == 10);

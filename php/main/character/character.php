@@ -12,14 +12,14 @@ class character
     private $_race;
     private $_equipedItems;
     private $_inventory;
+    private $_strength;
+    private $_dexterity;
+    private $_constitution;
+    private $_wisdom;
+    private $_intelligence;
+    private $_charisma;
 
     public $name;
-    public $strength;
-    public $dexterity;
-    public $constitution;
-    public $wisdom;
-    public $intelligence;
-    public $charisma;
     public $experience;
     public $class;
 
@@ -27,12 +27,12 @@ class character
         $this->class = array();
         $this->_equipedItems = array();
         $this->_armorClass = 10;
-        $this->strength = 10;
-        $this->dexterity = 10;
-        $this->constitution = 10;
-        $this->wisdom = 10;
-        $this->intelligence = 10;
-        $this->charisma = 10;
+        $this->_strength = 10;
+        $this->_dexterity = 10;
+        $this->_constitution = 10;
+        $this->_wisdom = 10;
+        $this->_intelligence = 10;
+        $this->_charisma = 10;
         $this->experience = 0;
         $this->_race = new humanRace();
         $this->hitPoints = $this->getMaxHitPoints();
@@ -74,6 +74,18 @@ class character
                 return $this->getEquipmentOfType(\Equipment\itemType::$Shield);
             case "inventory":
                 return $this->_inventory;
+            case "strength":
+                return $this->getStrength();
+            case "dexterity":
+                return $this->getDexterity();
+            case "constitution":
+                return $this->getConstitution();
+            case "wisdom":
+                return $this->getWisdom();
+            case "intelligence":
+                return $this->getIntelligence();
+            case "charisma":
+                return $this->getCharisma();
         }
     }
 
@@ -91,10 +103,31 @@ class character
                 return;
             case "equipedArmor":
                 $this->equip($value);
+                return;
             case "equipedWeapon":
                 $this->equip($value);
+                return;
             case "equipedShield":
                 $this->equip($value);
+                return;
+            case "strength":
+                $this->_strength = $value;
+                return;
+            case "dexterity":
+                $this->_dexterity = $value;
+                return;
+            case "constitution":
+                $this->_constitution = $value;
+                return;
+            case "wisdom":
+                $this->_wisdom = $value;
+                return;
+            case "intelligence":
+                $this->_intelligence = $value;
+                return;
+            case "charisma":
+                $this->_charisma = $value;
+                return;
         }
     }
 
@@ -367,5 +400,49 @@ class character
         $dexMod = $this->abilityModifier($this->dexterity);
         $dexMod += $this->solveFormulaCategory(availableFormulaCategories::$DexterityModifierBonus);
         return $dexMod;
+    }
+
+    private function getStrength()
+    {
+        $strBonus = 0;
+        foreach($this->_equipedItems as $equipment)
+            $strBonus += $equipment->getAbilityModifier("strength");
+        return $strBonus + $this->_strength;
+    }
+
+    private function getDexterity(){
+        $dexBonus = 0;
+        foreach($this->_equipedItems as $equipment)
+            $dexBonus += $equipment->getAbilityModifier("dexterity");
+        return $dexBonus + $this->_dexterity;
+
+    }
+
+    private function getConstitution(){
+        $conBonus = 0;
+        foreach($this->_equipedItems as $equipment)
+            $conBonus += $equipment->getAbilityModifier("constitution");
+        return $conBonus + $this->_constitution;
+    }
+
+    private function getWisdom(){
+        $wisBonus = 0;
+        foreach($this->_equipedItems as $equipment)
+            $wisBonus += $equipment->getAbilityModifier("wisdom");
+        return $wisBonus + $this->_wisdom;
+    }
+
+    private function getIntelligence(){
+        $intBonus = 0;
+        foreach($this->_equipedItems as $equipment)
+            $intBonus += $equipment->getAbilityModifier("intelligence");
+        return $intBonus + $this->_intelligence;
+    }
+
+    private function getCharisma(){
+        $chaBonus = 0;
+        foreach($this->_equipedItems as $equipment)
+            $chaBonus += $equipment->getAbilityModifier("charisma");
+        return $chaBonus + $this->_charisma;
     }
 }

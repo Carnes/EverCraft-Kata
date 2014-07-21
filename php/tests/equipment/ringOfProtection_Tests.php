@@ -31,7 +31,7 @@ class ringOfProtection_Tests implements testInterface
         $noRingAC = $c->armorClass;
 
         //Act
-        $c->equipedShield = $this->ring;
+        $c->equip($this->ring);
         $withRingAC = $c->armorClass;
 
         //Assert

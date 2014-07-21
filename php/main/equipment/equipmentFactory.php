@@ -236,6 +236,18 @@ class equipmentFactory
         return $this;
     }
 
+    public function withAbilityModifier($abilityName, $amount)
+    {
+        $formula = new \Equipment\formula(
+            function() use($abilityName, $amount) { return $amount; },
+            ($amount >0 ? "+": "").$amount." to ".$abilityName,
+            \Equipment\formulaCategories::$AbilityModifier
+        );
+
+        $this->equipment->addFormula($formula);
+        return $this;
+    }
+
     public function getEquipment()
     {
         $e = $this->equipment;
