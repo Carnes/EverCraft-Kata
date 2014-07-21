@@ -21,6 +21,7 @@ class character
     public $experience;
     public $class;
     public $wieldedWeapon;
+    public $equipedArmor;
 
     public function __construct(){
         $this->class = array();

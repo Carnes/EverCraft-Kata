@@ -1,15 +1,15 @@
 <?php
 include_once("equipment.php");
 include_once("formula.php");
-class weaponFactory
+class equipmentFactory
 {
     private $equipment;
 
-    private function __construct($weapon = null){
-        if($weapon == null)
+    private function __construct($equipment = null){
+        if($equipment == null)
             $this->equipment = new Equipment\equipment();
         else
-            $this->equipment = $weapon;
+            $this->equipment = $equipment;
     }
 
     public static function startForge(){
@@ -17,8 +17,8 @@ class weaponFactory
         return $self;
     }
 
-    public static function reForge($weapon){
-        $self = new self($weapon);
+    public static function reForge($equipment){
+        $self = new self($equipment);
         return $self;
     }
 
@@ -183,13 +183,16 @@ class weaponFactory
             throw new Exception("Cannot forge equipment without a sub-type.");
         if($e->type == \Equipment\itemType::$Weapon)
         {
-            //$weaponSubTypes = get_object_vars(new Equipment\weaponSubType());
-            //$class = new ReflectionClass('Foo');
             $weaponSubTypes = (new ReflectionClass('Equipment\weaponSubType'))->getStaticProperties();
             if(array_search($e->subType,$weaponSubTypes)===false)
                 throw new Exception("Cannot forge weapon without a weapon sub-type.");
         }
-        //    throw new Exception("Cannot forge weapon without a weapon sub-type.");
+        if($e->type == \Equipment\itemType::$Armor)
+        {
+            $armorSubTypes = (new ReflectionClass('Equipment\armorSubType'))->getStaticProperties();
+            if(array_search($e->subType,$armorSubTypes)===false)
+                throw new Exception("Cannot forge armor without an armor sub-type.");
+        }
         return $this->equipment;
     }
 }

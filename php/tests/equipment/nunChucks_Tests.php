@@ -3,7 +3,7 @@ class nunChucks_Tests implements testInterface
 {
     private $nunChucks;
     public function initialize(){
-        $this->nunChucks = weaponFactory::startForge()
+        $this->nunChucks = equipmentFactory::startForge()
             ->withName("nun chucks")
             ->withSubType(\Equipment\weaponSubType::$Nunchucks)
             ->withType(\Equipment\itemType::$Weapon)

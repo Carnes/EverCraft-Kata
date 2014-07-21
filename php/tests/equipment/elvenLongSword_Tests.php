@@ -3,7 +3,7 @@ class elvenLongSword_Tests implements testInterface
 {
     private $els;
     public function initialize(){
-        $this->els = weaponFactory::startForge()
+        $this->els = equipmentFactory::startForge()
             ->withName("Glamdring")
             ->withSubType(\Equipment\weaponSubType::$Longsword)
             ->withDamage(6)

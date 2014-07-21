@@ -6,6 +6,7 @@ class itemType
 {
     public static $Unknown = "unknown";
     public static $Weapon = "weapon";
+    public static $Armor = "armor";
 }
 
 class itemSubType
@@ -18,6 +19,11 @@ class weaponSubType
     public static $WarAxe = "war axe";
     public static $Nunchucks = "nunchaku";
     public static $Longsword = "longsword";
+}
+
+class armorSubType
+{
+    public static $Plate = "copper plate";
 }
 
 class equipment implements IEquipment
@@ -99,6 +105,5 @@ class equipment implements IEquipment
             return $this->processAdditiveFormulas($formulas, $wielder, $target);
         if($category->type == formulaType::BestOf)
             return $this->processBestOfFormulas($formulas, $wielder, $target);
-
     }
 }

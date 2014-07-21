@@ -7,7 +7,7 @@ class longSword_Tests implements testInterface
     private $longsword;
 
     public function initialize() {
-        $this->longsword = weaponFactory::startForge()
+        $this->longsword = equipmentFactory::startForge()
             ->withDamage(5)
             ->withName("longsword")
             ->withSubType(\Equipment\weaponSubType::$Longsword)

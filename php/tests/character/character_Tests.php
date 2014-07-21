@@ -84,7 +84,7 @@ class character_Tests implements testInterface
         //Arrange
         $c = new character();
         $noWeapon = $c->wieldedWeapon;
-        $longsword = weaponFactory::startForge()
+        $longsword = equipmentFactory::startForge()
             ->withDamage(5)
             ->withName("longsword")
             ->withType(\Equipment\itemType::$Weapon)
@@ -98,5 +98,24 @@ class character_Tests implements testInterface
         //Assert
         assert($noWeapon == null);
         assert($withWeapon instanceof Equipment\IEquipment);
+    }
+
+    public function ItCanWearArmor()
+    {
+        //Arrange
+        $c = new character();
+        $armor = equipmentFactory::startForge()
+            ->withType(\Equipment\itemType::$Armor)
+            ->withSubType(\Equipment\armorSubType::$Plate)
+            ->withName("tarnished copper plate armor")
+            ->getEquipment();
+        $noArmor = $c->equipedArmor;
+
+        //Act
+        $c->equipedArmor = $armor;
+        $hasArmor = $c->equipedArmor;
+
+        //Assert
+        assert($hasArmor == $armor);
     }
 }
