@@ -45,7 +45,7 @@ class longSword_Tests implements testInterface
         $attacker = new character();
         $defender = new character();
         $defender->experience+=10000;
-        $attacker->wieldedWeapon = $this->longsword;
+        $attacker->equip($this->longsword);
         $preHP = $defender->hitPoints;
         $attackBaseDmg = 1;
 

@@ -50,7 +50,7 @@ class elvenLongSword_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->els;
+        $attacker->equipedWeapon = $this->els;
         $attacker->setRace(new elfRace());
         $defender = new character();
         $roll = 18;
@@ -68,7 +68,7 @@ class elvenLongSword_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->els;
+        $attacker->equipedWeapon = $this->els;
         $defender = new character();
         $defender->setRace(new orcRace());
         $roll = 18;
@@ -85,7 +85,7 @@ class elvenLongSword_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->els;
+        $attacker->equipedWeapon = $this->els;
         $attacker->setRace(new elfRace());
         $defender = new character();
         $defender->setRace(new orcRace());
@@ -104,7 +104,7 @@ class elvenLongSword_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->els;
+        $attacker->equipedWeapon = $this->els;
         $attacker->setRace(new elfRace());
         $defender = new character();
         $roll = $defender->armorClass - 1;
@@ -120,7 +120,7 @@ class elvenLongSword_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->els;
+        $attacker->equipedWeapon = $this->els;
         $defender = new character();
         $defender->setRace(new orcRace());
         $roll = $defender->armorClass - 1;
@@ -136,7 +136,7 @@ class elvenLongSword_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->els;
+        $attacker->equipedWeapon = $this->els;
         $attacker->setRace(new elfRace());
         $defender = new character();
         $defender->setRace(new orcRace());

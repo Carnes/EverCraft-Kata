@@ -50,7 +50,7 @@ class plus2WarAxe_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->axe;
+        $attacker->equipedWeapon = $this->axe;
         $defender = new character();
         $roll = $defender->armorClass -1;
 
@@ -65,7 +65,7 @@ class plus2WarAxe_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->axe;
+        $attacker->equipedWeapon = $this->axe;
         $defender = new character();
         $defender->experience += 5000;
         $roll = 20;
@@ -83,7 +83,7 @@ class plus2WarAxe_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->axe;
+        $attacker->equipedWeapon = $this->axe;
         $attacker->addClass(availableClasses::Rogue);
         $defender = new character();
         $defender->experience += 5000;

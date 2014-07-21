@@ -45,7 +45,7 @@ class nunChucks_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->nunChucks;
+        $attacker->equipedWeapon = $this->nunChucks;
         $defender = new character();
         $roll = $defender->armorClass + 4;
 
@@ -60,7 +60,7 @@ class nunChucks_Tests implements testInterface
     {
         //Arrange
         $attacker = new character();
-        $attacker->wieldedWeapon = $this->nunChucks;
+        $attacker->equipedWeapon = $this->nunChucks;
         $attacker->addClass(availableClasses::WarMonk);
         $defender = new character();
         $roll = $defender->armorClass + 1;

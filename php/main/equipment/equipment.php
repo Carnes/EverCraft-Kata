@@ -7,11 +7,17 @@ class itemType
     public static $Unknown = "unknown";
     public static $Weapon = "weapon";
     public static $Armor = "armor";
+    public static $Shield = "shield";
 }
 
 class itemSubType
 {
     public static $Unknown = "unknown";
+}
+
+class shieldSubType
+{
+    public static $Wood = "wood";
 }
 
 class weaponSubType

@@ -10,7 +10,8 @@ class character
     private $hitPoints;
     private $_armorClass;
     private $_race;
-    private $_equipedArmor;
+    private $_equipedItems;
+    private $_inventory;
 
     public $name;
     public $strength;
@@ -21,10 +22,10 @@ class character
     public $charisma;
     public $experience;
     public $class;
-    public $wieldedWeapon;
 
     public function __construct(){
         $this->class = array();
+        $this->_equipedItems = array();
         $this->_armorClass = 10;
         $this->strength = 10;
         $this->dexterity = 10;
@@ -66,7 +67,13 @@ class character
             case "race":
                 return $this->_race;
             case "equipedArmor":
-                return $this->_equipedArmor;
+                return $this->getEquipmentOfType(\Equipment\itemType::$Armor);
+            case "equipedWeapon":
+                return $this->getEquipmentOfType(\Equipment\itemType::$Weapon);
+            case "equipedShield":
+                return $this->getEquipmentOfType(\Equipment\itemType::$Shield);
+            case "inventory":
+                return $this->_inventory;
         }
     }
 
@@ -83,6 +90,10 @@ class character
                 $this->setRace($value);
                 return;
             case "equipedArmor":
+                $this->equip($value);
+            case "equipedWeapon":
+                $this->equip($value);
+            case "equipedShield":
                 $this->equip($value);
         }
     }
@@ -102,8 +113,9 @@ class character
 
     public function takeDamage($amount)
     {
-        if($this->_equipedArmor instanceof \Equipment\IEquipment)
-            $amount-=$this->_equipedArmor->getDamageReduction($this,null);
+        foreach($this->_equipedItems as $equipment)
+            $amount -= $equipment->getDamageReduction($this, null);
+
         if($amount > 0)
             $this->hitPoints-=$amount;
     }
@@ -114,14 +126,14 @@ class character
         $damage += $this->getAttackDamageBonus($defender);
         $weaponDamage = 0;
 
-        if($this->wieldedWeapon instanceof Equipment\IEquipment)
-            $weaponDamage += $this->wieldedWeapon->getDamage($this, $defender);
+        foreach($this->_equipedItems as $equipment)
+            $weaponDamage += $equipment->getDamage($this, $defender);
 
         if($attackRole >= 20 - $this->getCriticalHitRoleBonus($defender))
         {
             $damage *= $this->getCriticalHitMultiplier($defender);
-            if($this->wieldedWeapon instanceof Equipment\IEquipment)
-                $weaponDamage *= $this->wieldedWeapon->getCriticalMultiplier($this, $defender);
+            if($this->equipedWeapon instanceof Equipment\IEquipment)
+                $weaponDamage *= $this->equipedWeapon->getCriticalMultiplier($this, $defender);
         }
 
         $damage += $weaponDamage;
@@ -135,10 +147,10 @@ class character
     {
         $bonus = 0;
         $bonus += $this->solveFormulaCategory(availableFormulaCategories::$AttackRoleBonus, $defender);
-        if($this->wieldedWeapon instanceof Equipment\IEquipment)
-            $bonus += $this->wieldedWeapon->getAttack($this, $defender);
-        if($this->_equipedArmor instanceof Equipment\IEquipment)
-            $bonus += $this->_equipedArmor->getAttack($this, $defender);
+
+        foreach($this->_equipedItems as $equipment)
+            $bonus += $equipment->getAttack($this, $defender);
+
         return $bonus;
     }
 
@@ -179,14 +191,24 @@ class character
 
     public function equip($equipment)
     {
-        if($equipment->type == \Equipment\itemType::$Armor)
-            $this->equipArmor($equipment);
+        if(!($equipment instanceof \Equipment\IEquipment && $equipment->isEquipable($this)))
+            return;
+        if(isset($this->_equipedItems[$equipment->type]))
+            $this->addItemToInventory($this->_equipedItems[$equipment->type]);
+        $this->_equipedItems[$equipment->type] = $equipment;
     }
 
-    private function equipArmor($armor)
+    public function addItemToInventory($item)
     {
-        if($armor->isEquipable($this))
-            $this->_equipedArmor = $armor; //FIXME - this destroys previously equipped armor.  Cannot be fixed until we get inventory or some place to drop it.
+        if($item instanceof \Equipment\IEquipment)
+            $this->_inventory[] = $item;
+    }
+
+    private function getEquipmentOfType($type)
+    {
+        foreach($this->_equipedItems as $equipment)
+            if($equipment->type == $type)
+                return $equipment;
     }
 
     private function getArmorClass($target = null)
@@ -194,8 +216,10 @@ class character
         $ac = $this->_armorClass;
         $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier);
         $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonus, $target);
-        if($this->equipedArmor instanceof \Equipment\IEquipment)
-            $ac += $this->equipedArmor->getArmorClass($this, $target);
+
+        foreach($this->_equipedItems as $equipment)
+            $ac += $equipment->getArmorClass($this, $target);
+
         return $ac;
     }
 

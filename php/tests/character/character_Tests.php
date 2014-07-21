@@ -83,7 +83,7 @@ class character_Tests implements testInterface
     {
         //Arrange
         $c = new character();
-        $noWeapon = $c->wieldedWeapon;
+        $noWeapon = $c->_equipedWeapon;
         $longsword = equipmentFactory::startForge()
             ->withDamage(5)
             ->withName("longsword")
@@ -92,8 +92,8 @@ class character_Tests implements testInterface
             ->getEquipment();
 
         //Act
-        $c->wieldedWeapon = $longsword;
-        $withWeapon = $c->wieldedWeapon;
+        $c->equipedWeapon = $longsword;
+        $withWeapon = $c->equipedWeapon;
 
         //Assert
         assert($noWeapon == null);
@@ -104,12 +104,7 @@ class character_Tests implements testInterface
     {
         //Arrange
         $c = new character();
-        $armor = equipmentFactory::startForge()
-            ->withType(\Equipment\itemType::$Armor)
-            ->withSubType(\Equipment\armorSubType::$Leather)
-            ->withName("torn leather armor")
-            ->getEquipment();
-        $noArmor = $c->equipedArmor;
+        $armor = $this->buildArmorWithName("torn leather armor");
 
         //Act
         $c->equipedArmor = $armor;
@@ -117,5 +112,28 @@ class character_Tests implements testInterface
 
         //Assert
         assert($hasArmor == $armor);
+    }
+
+    private function buildArmorWithName($name)
+    {
+        return equipmentFactory::startForge()
+            ->withType(\Equipment\itemType::$Armor)
+            ->withSubType(\Equipment\armorSubType::$Leather)
+            ->withName($name)
+            ->getEquipment();
+    }
+
+    public function ItPutsEquipmentInInventoryIfEquipingAnOccupiedSlot()
+    {
+        //Arrange
+        $bigArmor = $this->buildArmorWithName("big leather armor");
+        $smallArmor = $this->buildArmorWithName("big leather armor");
+        $c = new character();
+
+        //Act
+        $c->equip($smallArmor);
+        $c->equip($bigArmor);
+
+        assert($c->inventory[0] == $smallArmor);
     }
 }
