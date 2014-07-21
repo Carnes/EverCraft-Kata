@@ -5,13 +5,14 @@ include_once("races/humanRace.php");
 include_once("classes/availableClasses.php");
 class character
 {
+    private static $abilityModifierLookup = array(null,-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0,1,1,2,2,3,3,4,4,5);
     private $alignment;
     private $hitPoints;
-    private static $abilityModifierLookup = array(null,-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0,1,1,2,2,3,3,4,4,5);
-
-    public $name;
     private $_armorClass;
     private $_race;
+    private $_equipedArmor;
+
+    public $name;
     public $strength;
     public $dexterity;
     public $constitution;
@@ -21,7 +22,6 @@ class character
     public $experience;
     public $class;
     public $wieldedWeapon;
-    public $equipedArmor;
 
     public function __construct(){
         $this->class = array();
@@ -65,6 +65,8 @@ class character
                 return $this->alignment;
             case "race":
                 return $this->_race;
+            case "equipedArmor":
+                return $this->_equipedArmor;
         }
     }
 
@@ -80,6 +82,8 @@ class character
             case "race":
                 $this->setRace($value);
                 return;
+            case "equipedArmor":
+                $this->equip($value);
         }
     }
 
@@ -166,6 +170,18 @@ class character
             if($class->getName() == $className)
                 return true;
         return false;
+    }
+
+    public function equip($equipment)
+    {
+        if($equipment->type == \Equipment\itemType::$Armor)
+            $this->equipArmor($equipment);
+    }
+
+    private function equipArmor($armor)
+    {
+        if($armor->isEquipable($this))
+            $this->_equipedArmor = $armor; //FIXME - this destroys previously equipped armor.  Cannot be fixed until we get inventory or some place to drop it.
     }
 
     private function getArmorClass($target = null)

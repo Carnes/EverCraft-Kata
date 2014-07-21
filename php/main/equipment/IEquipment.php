@@ -6,4 +6,5 @@ interface IEquipment
     function getAttack($wielder, $target);
     function getCriticalMultiplier($wielder, $target);
     function getArmorClass($wearer, $attacker);
+    function isEquipable($wearer);
 }

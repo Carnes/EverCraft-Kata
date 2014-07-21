@@ -23,7 +23,7 @@ class weaponSubType
 
 class armorSubType
 {
-    public static $CopperPlate = "copper plate";
+    public static $Plate = "plate";
     public static $Leather = "leather";
 }
 
@@ -46,6 +46,14 @@ class equipment implements IEquipment
     {
         if($formula instanceof formula)
             $this->formulas[] = $formula;
+    }
+
+    public function isEquipable($wearer)
+    {
+        $isWearable = $this->processFormulas(formulaCategories::$EquipRestriction, $wearer, null);
+        if($isWearable === false)
+            return false;
+        return true;
     }
 
     public function getDamage($wielder = null, $target = null)
@@ -104,6 +112,20 @@ class equipment implements IEquipment
         return $best;
     }
 
+    private function processHasTrueFormulas($formulas, $wielder, $target)
+    {
+        $isTrue = null;
+        foreach($formulas as $formula)
+        {
+            $result = $formula->execute([$wielder, $target]);
+            if($result===true)
+                return true;
+            if($result===false)
+                $isTrue = false;
+        }
+        return $isTrue;
+    }
+
     private function processFormulas($category, $wielder, $target)
     {
         $formulas = $this->getFormulasForCategory($category);
@@ -111,5 +133,7 @@ class equipment implements IEquipment
             return $this->processAdditiveFormulas($formulas, $wielder, $target);
         if($category->type == formulaType::BestOf)
             return $this->processBestOfFormulas($formulas, $wielder, $target);
+        if($category->type == formulaType::HasTrue)
+            return $this->processHasTrueFormulas($formulas, $wielder, $target);
     }
 }
