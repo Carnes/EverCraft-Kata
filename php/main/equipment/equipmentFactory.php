@@ -172,6 +172,18 @@ class equipmentFactory
         return $this;
     }
 
+    public function withArmorClass($amount)
+    {
+        $formula = new \Equipment\formula(
+            function() use($amount) { return $amount; },
+            ($amount >0 ? "+": "").$amount." armor class",
+            \Equipment\formulaCategories::$ArmorClass
+        );
+
+        $this->equipment->addFormula($formula);
+        return $this;
+    }
+
     public function getEquipment()
     {
         $e = $this->equipment;

@@ -26,12 +26,14 @@ class formulaCategories
     public static $Damage;
     public static $Attack;
     public static $CriticalMultiplier;
+    public static $ArmorClass;
 
     public static function init()
     {
         self::$Damage = new formulaCategory(formulaType::Additive, "Damage");
         self::$Attack = new formulaCategory(formulaType::Additive, "Attack");
         self::$CriticalMultiplier = new formulaCategory(formulaType::BestOf, "Critical damage multiplier");
+        self::$ArmorClass = new formulaCategory(formulaType::Additive, "Armor Class");
     }
 }
 formulaCategories::init();

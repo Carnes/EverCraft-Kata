@@ -173,6 +173,8 @@ class character
         $ac = $this->_armorClass;
         $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier);
         $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonus, $target);
+        if($this->equipedArmor instanceof \Equipment\IEquipment)
+            $ac += $this->equipedArmor->getArmorClass($this, $target);
         return $ac;
     }
 

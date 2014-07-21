@@ -106,7 +106,7 @@ class character_Tests implements testInterface
         $c = new character();
         $armor = equipmentFactory::startForge()
             ->withType(\Equipment\itemType::$Armor)
-            ->withSubType(\Equipment\armorSubType::$Plate)
+            ->withSubType(\Equipment\armorSubType::$CopperPlate)
             ->withName("tarnished copper plate armor")
             ->getEquipment();
         $noArmor = $c->equipedArmor;

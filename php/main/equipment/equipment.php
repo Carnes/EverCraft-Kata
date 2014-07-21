@@ -23,7 +23,8 @@ class weaponSubType
 
 class armorSubType
 {
-    public static $Plate = "copper plate";
+    public static $CopperPlate = "copper plate";
+    public static $Leather = "leather";
 }
 
 class equipment implements IEquipment
@@ -61,6 +62,11 @@ class equipment implements IEquipment
     {
         $multiplier = $this->processFormulas(formulaCategories::$CriticalMultiplier, $wielder, $target);
         return ($multiplier == 0) ? 1 : $multiplier;
+    }
+
+    public function getArmorClass($wearer = null, $attacker = null)
+    {
+        return $this->processFormulas(formulaCategories::$ArmorClass, $wearer, $attacker);
     }
 
     private function getFormulasForCategory($category)
