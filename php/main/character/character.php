@@ -3,20 +3,11 @@ include_once("formula/availableFormulaCategories.php");
 include_once("characterBaseFormulas.php");
 include_once("races/humanRace.php");
 include_once("classes/availableClasses.php");
+include_once("characterEquipment.php");
+
 class character
 {
-    /*
-     * Slots
-    Armor
-    Hand x 2
-    Ring x 2
-    Arms
-    Helmet
-    Boots
-    Belt
-    Back
-    Necklace
-    */
+
 
     private static $abilityModifierLookup = array(null,-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0,1,1,2,2,3,3,4,4,5);
     private $alignment;
@@ -32,11 +23,14 @@ class character
     private $_intelligence;
     private $_charisma;
 
+    private $_equipment;
+
     public $name;
     public $experience;
     public $class;
 
     public function __construct(){
+        $this->_equipment = new characterEquipment();
         $this->_inventory = array();
         $this->class = array();
         $this->_equipedItems = array();
@@ -238,22 +232,26 @@ class character
 
     public function equip($equipment)
     {
-        if(!($equipment instanceof \Equipment\IEquipment && $equipment->isEquipable($this)))
-            return;
-        if(isset($this->_equipedItems[$equipment->type]))
-            $this->addItemToInventory($this->_equipedItems[$equipment->type]);
-        $this->_equipedItems[$equipment->type] = $equipment;
+        $this->_equipment->equip($equipment);
+//        if(!($equipment instanceof \Equipment\IEquipment && $equipment->isEquipable($this)))
+//            return;
+//        if(isset($this->_equipedItems[$equipment->type]))
+//            $this->addItemToInventory($this->_equipedItems[$equipment->type]);
+//        $this->_equipedItems[$equipment->type] = $equipment;
     }
 
     public function unequip($equipment)
     {
-        if(!($equipment instanceof \Equipment\IEquipment))
-            return;
-        if($this->_equipedItems[$equipment->type] == $equipment)
-        {
-            $this->addItemToInventory($this->_equipedItems[$equipment->type]);
-            unset($this->_equipedItems[$equipment->type]);
-        }
+        $unequipedEquipment = $this->_equipment->unequip($equipment);
+        foreach($unequipedEquipment as $unequiped)
+            $this->addItemToInventory($unequiped);
+//        if(!($equipment instanceof \Equipment\IEquipment))
+//            return;
+//        if($this->_equipedItems[$equipment->type] == $equipment)
+//        {
+//            $this->addItemToInventory($this->_equipedItems[$equipment->type]);
+//            unset($this->_equipedItems[$equipment->type]);
+//        }
     }
 
     public function addItemToInventory($item)

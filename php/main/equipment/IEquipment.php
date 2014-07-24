@@ -2,6 +2,7 @@
 namespace Equipment;
 interface IEquipment
 {
+    function getName();
     function getDamage($wielder, $target);
     function getAttack($wielder, $target);
     function getCriticalMultiplier($wielder, $target);
@@ -9,4 +10,5 @@ interface IEquipment
     function getDamageReduction($wielder, $target);
     function getAbilityModifier($abilityName);
     function isEquipable($wearer);
+    function getRequiredSlots();
 }

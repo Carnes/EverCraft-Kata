@@ -2,6 +2,21 @@
 namespace Equipment;
 include_once ("IEquipment.php");
 
+class slotType
+{
+    public static $Chest = "armor";
+    public static $Hand = "hand";
+    public static $Finger = "finger";
+    public static $Arm = "arm";
+    public static $Head = "helmet";
+    public static $Foot = "boot";
+    public static $Waist = "belt";
+    public static $Back = "back";
+    public static $Neck = "neck";
+    public static $NeckDecoration = "neckDecoration";
+    public static $Leg = "leg";
+}
+
 class itemType
 {
     public static $Unknown = "unknown";
@@ -74,6 +89,16 @@ class equipment implements IEquipment
         if($isWearable === false)
             return false;
         return true;
+    }
+
+    public function  getName()
+    {
+        return $this->name;
+    }
+
+    public function getRequiredSlots()
+    {
+        return [];
     }
 
     public function getAbilityModifier($abilityName)
