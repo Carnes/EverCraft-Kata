@@ -37,6 +37,7 @@ class weaponSubType
     public static $WarAxe = "war axe";
     public static $Nunchucks = "nunchaku";
     public static $Longsword = "longsword";
+    public static $Greatsword = 'greatsword';
 }
 
 class armorSubType

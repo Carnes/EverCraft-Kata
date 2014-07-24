@@ -201,7 +201,14 @@ class equipmentFactory
         if(!is_array($arrayOfClassNames))
             throw new Exception("Must call 'withClassRestriction' with an array of class names.");
         $formula = new \Equipment\formula(
-            function($wearer)use($arrayOfClassNames){ if($wearer == null) return false; foreach($arrayOfClassNames as $className) if($wearer->hasClassName($className)) return true; return false; },
+            function($wearer)use($arrayOfClassNames)
+            {
+                if($wearer == null) return false;
+                foreach($arrayOfClassNames as $className)
+                    if($wearer->hasClassName($className))
+                        return true;
+                return false;
+            },
             "restricted to classes: ".implode($arrayOfClassNames," "),
             \Equipment\formulaCategories::$EquipRestriction
         );

@@ -5,6 +5,19 @@ include_once("races/humanRace.php");
 include_once("classes/availableClasses.php");
 class character
 {
+    /*
+     * Slots
+    Armor
+    Hand x 2
+    Ring x 2
+    Arms
+    Helmet
+    Boots
+    Belt
+    Back
+    Necklace
+    */
+
     private static $abilityModifierLookup = array(null,-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0,1,1,2,2,3,3,4,4,5);
     private $alignment;
     private $hitPoints;
@@ -24,6 +37,7 @@ class character
     public $class;
 
     public function __construct(){
+        $this->_inventory = array();
         $this->class = array();
         $this->_equipedItems = array();
         $this->_armorClass = 10;
@@ -229,6 +243,17 @@ class character
         if(isset($this->_equipedItems[$equipment->type]))
             $this->addItemToInventory($this->_equipedItems[$equipment->type]);
         $this->_equipedItems[$equipment->type] = $equipment;
+    }
+
+    public function unequip($equipment)
+    {
+        if(!($equipment instanceof \Equipment\IEquipment))
+            return;
+        if($this->_equipedItems[$equipment->type] == $equipment)
+        {
+            $this->addItemToInventory($this->_equipedItems[$equipment->type]);
+            unset($this->_equipedItems[$equipment->type]);
+        }
     }
 
     public function addItemToInventory($item)

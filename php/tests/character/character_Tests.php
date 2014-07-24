@@ -127,7 +127,7 @@ class character_Tests implements testInterface
     {
         //Arrange
         $bigArmor = $this->buildArmorWithName("big leather armor");
-        $smallArmor = $this->buildArmorWithName("big leather armor");
+        $smallArmor = $this->buildArmorWithName("small leather armor");
         $c = new character();
 
         //Act
@@ -135,5 +135,22 @@ class character_Tests implements testInterface
         $c->equip($bigArmor);
 
         assert($c->inventory[0] == $smallArmor);
+    }
+
+    public function ItCanUnequip()
+    {
+        //Arrange
+        $bigArmor = $this->buildArmorWithName("big leather armor");
+        $c = new character();
+
+        //Act
+        $c->equip($bigArmor);
+        $isEquiped = $c->equipedArmor;
+        $c->unequip($bigArmor);
+        $isNotEquiped = $c->equipedArmor;
+
+        //Assert
+        assert($isEquiped == $bigArmor);
+        assert($isNotEquiped == null);
     }
 }
