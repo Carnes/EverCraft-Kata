@@ -203,7 +203,7 @@ class equipmentFactory
         $formula = new \Equipment\formula(
             function($wearer)use($arrayOfClassNames)
             {
-                if($wearer == null) return false;
+                if(!($wearer instanceof character)) return false;
                 foreach($arrayOfClassNames as $className)
                     if($wearer->hasClassName($className))
                         return true;
@@ -222,7 +222,7 @@ class equipmentFactory
         if(!is_array($arrayOfRaceNames))
             throw new Exception("Must call 'withRaceRestriction' with an array of race names.");
         $formula = new \Equipment\formula(
-            function($wearer)use($arrayOfRaceNames){ if($wearer == null) return false; foreach($arrayOfRaceNames as $raceName) if($wearer->race->getName()==$raceName) return true; return false; },
+            function($wearer)use($arrayOfRaceNames){ if(!($wearer instanceof character)) return false; foreach($arrayOfRaceNames as $raceName) if($wearer->race->getName()==$raceName) return true; return false; },
             "restricted to races: ".implode($arrayOfRaceNames," "),
             \Equipment\formulaCategories::$EquipRestriction
         );

@@ -92,7 +92,7 @@ class character_Tests implements testInterface
             ->getEquipment();
 
         //Act
-        $c->equipedWeapon = $longsword;
+        $c->equip($longsword);
         $withWeapon = $c->equipedWeapon;
 
         //Assert
@@ -134,7 +134,8 @@ class character_Tests implements testInterface
         $c->equip($smallArmor);
         $c->equip($bigArmor);
 
-        assert($c->inventory[0] == $smallArmor);
+        //assert($c->inventory[0] == $smallArmor);
+        assert(false);
     }
 
     public function ItCanUnequip()

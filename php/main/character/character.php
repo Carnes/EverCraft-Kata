@@ -14,7 +14,6 @@ class character
     private $hitPoints;
     private $_armorClass;
     private $_race;
-    private $_equipedItems;
     private $_inventory;
     private $_strength;
     private $_dexterity;
@@ -30,10 +29,9 @@ class character
     public $class;
 
     public function __construct(){
-        $this->_equipment = new characterEquipment();
+        $this->_equipment = new characterEquipment($this);
         $this->_inventory = array();
         $this->class = array();
-        $this->_equipedItems = array();
         $this->_armorClass = 10;
         $this->_strength = 10;
         $this->_dexterity = 10;
@@ -154,7 +152,7 @@ class character
 
     public function takeDamage($amount)
     {
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment) //FIXME
             $amount -= $equipment->getDamageReduction($this, null);
 
         if($amount > 0)
@@ -167,7 +165,7 @@ class character
         $damage += $this->getAttackDamageBonus($defender);
         $weaponDamage = 0;
 
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment) //FIXME
             $weaponDamage += $equipment->getDamage($this, $defender);
 
         if($attackRole >= 20 - $this->getCriticalHitRoleBonus($defender))
@@ -189,7 +187,7 @@ class character
         $bonus = 0;
         $bonus += $this->solveFormulaCategory(availableFormulaCategories::$AttackRoleBonus, $defender);
 
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment) //FIXME
             $bonus += $equipment->getAttack($this, $defender);
 
         return $bonus;
@@ -232,12 +230,9 @@ class character
 
     public function equip($equipment)
     {
-        $this->_equipment->equip($equipment);
-//        if(!($equipment instanceof \Equipment\IEquipment && $equipment->isEquipable($this)))
-//            return;
-//        if(isset($this->_equipedItems[$equipment->type]))
-//            $this->addItemToInventory($this->_equipedItems[$equipment->type]);
-//        $this->_equipedItems[$equipment->type] = $equipment;
+        $unequipedEquipment = $this->_equipment->equip($equipment);
+        foreach($unequipedEquipment as $unequiped)
+            $this->addItemToInventory($unequiped);
     }
 
     public function unequip($equipment)
@@ -245,13 +240,6 @@ class character
         $unequipedEquipment = $this->_equipment->unequip($equipment);
         foreach($unequipedEquipment as $unequiped)
             $this->addItemToInventory($unequiped);
-//        if(!($equipment instanceof \Equipment\IEquipment))
-//            return;
-//        if($this->_equipedItems[$equipment->type] == $equipment)
-//        {
-//            $this->addItemToInventory($this->_equipedItems[$equipment->type]);
-//            unset($this->_equipedItems[$equipment->type]);
-//        }
     }
 
     public function addItemToInventory($item)
@@ -262,9 +250,7 @@ class character
 
     private function getEquipmentOfType($type)
     {
-        foreach($this->_equipedItems as $equipment)
-            if($equipment->type == $type)
-                return $equipment;
+        return $this->_equipment->getEquipmentOfType($type);
     }
 
     private function getArmorClass($target = null)
@@ -273,7 +259,7 @@ class character
         $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonusForAbilityModifier);
         $ac += $this->solveFormulaCategory(availableFormulaCategories::$ArmorClassBonus, $target);
 
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment) //FIXME
             $ac += $equipment->getArmorClass($this, $target);
 
         return $ac;
@@ -428,14 +414,14 @@ class character
     private function getStrength()
     {
         $strBonus = 0;
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment)
             $strBonus += $equipment->getAbilityModifier("strength");
         return $strBonus + $this->_strength;
     }
 
     private function getDexterity(){
         $dexBonus = 0;
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment)
             $dexBonus += $equipment->getAbilityModifier("dexterity");
         return $dexBonus + $this->_dexterity;
 
@@ -443,28 +429,28 @@ class character
 
     private function getConstitution(){
         $conBonus = 0;
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment)
             $conBonus += $equipment->getAbilityModifier("constitution");
         return $conBonus + $this->_constitution;
     }
 
     private function getWisdom(){
         $wisBonus = 0;
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment)
             $wisBonus += $equipment->getAbilityModifier("wisdom");
         return $wisBonus + $this->_wisdom;
     }
 
     private function getIntelligence(){
         $intBonus = 0;
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment)
             $intBonus += $equipment->getAbilityModifier("intelligence");
         return $intBonus + $this->_intelligence;
     }
 
     private function getCharisma(){
         $chaBonus = 0;
-        foreach($this->_equipedItems as $equipment)
+        foreach($this->_equipment->equiped as $equipment)
             $chaBonus += $equipment->getAbilityModifier("charisma");
         return $chaBonus + $this->_charisma;
     }

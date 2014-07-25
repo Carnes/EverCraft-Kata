@@ -61,9 +61,11 @@ class characterEquipment
 {
     public $body;
     public $equiped;
+    private $character;
 
-    public function __construct()
+    public function __construct($character)
     {
+        $this->character = $character;
         $this->equiped = array();
         $this->body = array();
         $this->body[\Equipment\slotType::$Chest] = new characterEquipmentGroup(new characterEquipmentSlot("Armor"));
@@ -112,11 +114,19 @@ class characterEquipment
         return $equipment;
     }
 
+    public function getEquipmentOfType($equipmentType)
+    {
+        foreach($this->equiped as $needle)
+            if($needle->type == $equipmentType)
+                return $needle;
+        return null;
+    }
+
     public function equip($equipment)
     {
         $removedEquipment = array();
 
-        if(!($equipment instanceof \Equipment\IEquipment && $equipment->isEquipable($this)))
+        if(!($equipment instanceof \Equipment\IEquipment && $equipment->isEquipable($this->character)))
             return [$equipment];
 
         foreach($equipment->getRequiredSlots() as $slot)
@@ -131,11 +141,25 @@ class characterEquipment
         return $removedEquipment;
     }
 
+    private function isEquiped($equipment)
+    {
+        foreach($this->equiped as $needle)
+            if($needle == $equipment)
+                return true;
+        return false;
+    }
+
+    private function removeEquipment($equipment){
+        foreach($this->equiped as $key=>$needle)
+            if($needle == $equipment)
+                unset($this->equiped[$key]);
+    }
+
     public function unequip($equipment)
     {
         if(!($equipment instanceof \Equipment\IEquipment))
             throw new Exception("Cannot unequip something that isn't equipment.");
-        if(!(isset($this->equiped[$equipment]) && $this->equiped[$equipment] == $equipment))
+        if($this->isEquiped($equipment)===false)
             throw new Exception("Cannot unequip something that isn't already equiped.");
 
         foreach($equipment->getRequiredSlots() as $slot)
@@ -145,7 +169,7 @@ class characterEquipment
                 throw new Exception("unequip failed to remove a ".$slot." slot from ".$equipment->getName());
         }
 
-        unset($this->equiped[$equipment]);
+        $this->removeEquipment($equipment);
         return $equipment;
     }
 }
