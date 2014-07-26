@@ -12,6 +12,7 @@ class longSword_Tests implements testInterface
             ->withName("longsword")
             ->withSubType(\Equipment\weaponSubType::$Longsword)
             ->withType(\Equipment\itemType::$Weapon)
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
             ->getEquipment();
     }
 

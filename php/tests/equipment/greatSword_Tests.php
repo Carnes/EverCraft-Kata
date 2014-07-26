@@ -12,6 +12,8 @@ class greatSword_Tests implements testInterface
             ->withType(\Equipment\itemType::$Weapon)
             ->withDamage(10)
             ->withRestrictionForOnlyTheseClasses(["Fighter"])
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
             ->getEquipment();
     }
 
@@ -65,6 +67,7 @@ class greatSword_Tests implements testInterface
             ->withType(\Equipment\itemType::$Shield)
             ->withSubType(\Equipment\shieldSubType::$Wood)
             ->withArmorClass(4)
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
             ->getEquipment();
     }
 
@@ -72,16 +75,17 @@ class greatSword_Tests implements testInterface
     {
         //Arrange
         $wielder = new character();
+        $wielder->addClass(availableClasses::Fighter);
         $shield = $this->getRandomShield();
 
         //Act
         $wielder->equip($shield);
-        //$wielder->unequip($shield);
         $wielder->equip($this->greatsword);
 
         //Assert
         assert(count($wielder->inventory)==1);
-        //assert($wielder->inventory[0] == $shield);
+        assert($wielder->inventory[0] == $shield);
+        assert($wielder->equipedWeapon == $this->greatsword);
     }
 
 }

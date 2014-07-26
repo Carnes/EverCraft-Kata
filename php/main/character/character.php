@@ -78,6 +78,8 @@ class character
                 return $this->getEquipmentOfType(\Equipment\itemType::$Weapon);
             case "equipedShield":
                 return $this->getEquipmentOfType(\Equipment\itemType::$Shield);
+            case "equipment":
+                return $this->_equipment->equiped;
             case "inventory":
                 return $this->_inventory;
             case "strength":

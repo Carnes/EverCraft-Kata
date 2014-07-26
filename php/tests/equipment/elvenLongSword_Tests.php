@@ -14,6 +14,7 @@ class elvenLongSword_Tests implements testInterface
             ->withAttackAgainstRace(2, "Orc")
             ->withAttackForRaceAgainstRace(1, "Elf", "Orc")
             ->withType(\Equipment\itemType::$Weapon)
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
             ->getEquipment();
     }
 

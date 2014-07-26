@@ -255,6 +255,24 @@ class equipmentFactory
         return $this;
     }
 
+    public function withRequiredBodySlot($slot)
+    {
+        $this->equipment->requiredBodySlots[] = $slot;
+        return $this;
+    }
+
+    public function withEquipRestriction()
+    {
+        $formula = new \Equipment\formula(
+            function($wearer){ return false; },
+            "cannot be equiped",
+            \Equipment\formulaCategories::$EquipRestriction
+        );
+
+        $this->equipment->addFormula($formula);
+        return $this;
+    }
+
     public function getEquipment()
     {
         $e = $this->equipment;
@@ -276,6 +294,8 @@ class equipmentFactory
             if(array_search($e->subType,$armorSubTypes)===false)
                 throw new Exception("Cannot forge armor without an armor sub-type.");
         }
+        if(count($e->requiredBodySlots)==0)
+            $this->withEquipRestriction();
         return $this->equipment;
     }
 }

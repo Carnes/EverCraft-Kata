@@ -131,7 +131,7 @@ class characterEquipment
 
         foreach($equipment->getRequiredSlots() as $slot)
         {
-            if(!($slot->hasAvailableSlot()))
+            if(!($this->body[$slot]->hasAvailableSlot()))
                 $removedEquipment[] = $this->unequip($this->getItemInSlot($slot));
             $this->body[$slot]->occupyEquipmentSlot($equipment);
         }
@@ -164,7 +164,7 @@ class characterEquipment
 
         foreach($equipment->getRequiredSlots() as $slot)
         {
-            $removeSuccess = $this->body[$slot]->removeEquipmentSlot($equipment);
+            $removeSuccess = $this->body[$slot]->freeEquipmentSlot($equipment);
             if($removeSuccess === false)
                 throw new Exception("unequip failed to remove a ".$slot." slot from ".$equipment->getName());
         }

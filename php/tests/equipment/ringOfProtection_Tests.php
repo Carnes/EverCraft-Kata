@@ -8,6 +8,7 @@ class ringOfProtection_Tests implements testInterface
             ->withType(\Equipment\itemType::$Ring)
             ->withSubType(\Equipment\ringSubType::$Magic)
             ->withArmorClass(2)
+            ->withRequiredBodySlot(\Equipment\slotType::$Finger)
             ->getEquipment();
     }
 

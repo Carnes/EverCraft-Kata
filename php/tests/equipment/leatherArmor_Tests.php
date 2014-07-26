@@ -8,6 +8,11 @@ class leatherArmor_Tests implements testInterface
             ->withType(\Equipment\itemType::$Armor)
             ->withSubType("leather")
             ->withArmorClass(2)
+            ->withRequiredBodySlot(\Equipment\slotType::$Chest)
+            ->withRequiredBodySlot(\Equipment\slotType::$Leg)
+            ->withRequiredBodySlot(\Equipment\slotType::$Leg)
+            ->withRequiredBodySlot(\Equipment\slotType::$Arm)
+            ->withRequiredBodySlot(\Equipment\slotType::$Arm)
             ->getEquipment();
     }
 

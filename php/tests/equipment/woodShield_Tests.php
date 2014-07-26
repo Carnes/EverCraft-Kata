@@ -8,6 +8,7 @@ class woodShield_Tests implements testInterface
             ->withType(\Equipment\itemType::$Shield)
             ->withSubType(\Equipment\shieldSubType::$Wood)
             ->withArmorClass(4)
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
             ->getEquipment();
     }
 

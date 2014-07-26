@@ -10,6 +10,11 @@ class elvenChainMail_Tests implements testInterface
             ->withArmorClass(5)
             ->withArmorClassForRace(3,"Elf")
             ->withAttackForRace(1,"Elf")
+            ->withRequiredBodySlot(\Equipment\slotType::$Chest)
+            ->withRequiredBodySlot(\Equipment\slotType::$Leg)
+            ->withRequiredBodySlot(\Equipment\slotType::$Leg)
+            ->withRequiredBodySlot(\Equipment\slotType::$Arm)
+            ->withRequiredBodySlot(\Equipment\slotType::$Arm)
             ->getEquipment();
     }
 

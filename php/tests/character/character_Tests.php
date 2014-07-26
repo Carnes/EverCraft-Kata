@@ -89,6 +89,7 @@ class character_Tests implements testInterface
             ->withName("longsword")
             ->withType(\Equipment\itemType::$Weapon)
             ->withSubType(\Equipment\weaponSubType::$Longsword)
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
             ->getEquipment();
 
         //Act
@@ -120,6 +121,7 @@ class character_Tests implements testInterface
             ->withType(\Equipment\itemType::$Armor)
             ->withSubType(\Equipment\armorSubType::$Leather)
             ->withName($name)
+            ->withRequiredBodySlot(\Equipment\slotType::$Chest)
             ->getEquipment();
     }
 
@@ -134,8 +136,7 @@ class character_Tests implements testInterface
         $c->equip($smallArmor);
         $c->equip($bigArmor);
 
-        //assert($c->inventory[0] == $smallArmor);
-        assert(false);
+        assert($c->inventory[0] == $smallArmor);
     }
 
     public function ItCanUnequip()

@@ -8,6 +8,7 @@ class warBeltOfStrength_Tests implements testInterface
             ->withType(\Equipment\itemType::$Belt)
             ->withSubType(\Equipment\beltSubType::$Magic)
             ->withAbilityModifier("strength",4)
+            ->withRequiredBodySlot(\Equipment\slotType::$Waist)
             ->getEquipment();
     }
 

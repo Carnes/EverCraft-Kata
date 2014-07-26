@@ -14,6 +14,7 @@ class plus2WarAxe_Tests implements testInterface
             ->withName("+2 war axe")
             ->withSubType(\Equipment\weaponSubType::$WarAxe)
             ->withType(\Equipment\itemType::$Weapon)
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
             ->getEquipment();
     }
 

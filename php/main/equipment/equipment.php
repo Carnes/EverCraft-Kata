@@ -67,11 +67,13 @@ class equipment implements IEquipment
     public $name;
     public $type;
     public $subType;
+    public $requiredBodySlots;
     private $formulas;
 
     public function __construct()
     {
-        $this->formulas=array();
+        $this->requiredBodySlots = array();
+        $this->formulas = array();
         $this->name = "Unknown";
         $this->subType = itemSubType::$Unknown;
         $this->type = itemType::$Unknown;
@@ -98,7 +100,7 @@ class equipment implements IEquipment
 
     public function getRequiredSlots()
     {
-        return [];
+        return $this->requiredBodySlots;
     }
 
     public function getAbilityModifier($abilityName)

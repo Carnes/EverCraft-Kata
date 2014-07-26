@@ -9,6 +9,11 @@ class magicLeatherArmor_Tests implements testInterface
             ->withSubType(\Equipment\armorSubType::$Leather)
             ->withArmorClass(2)
             ->withDamageReduction(2)
+            ->withRequiredBodySlot(\Equipment\slotType::$Chest)
+            ->withRequiredBodySlot(\Equipment\slotType::$Leg)
+            ->withRequiredBodySlot(\Equipment\slotType::$Leg)
+            ->withRequiredBodySlot(\Equipment\slotType::$Arm)
+            ->withRequiredBodySlot(\Equipment\slotType::$Arm)
             ->getEquipment();
     }
 

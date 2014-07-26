@@ -9,6 +9,8 @@ class nunChucks_Tests implements testInterface
             ->withType(\Equipment\itemType::$Weapon)
             ->withDamage(6)
             ->withAttackForNonClass(-4, "War Monk")
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
+            ->withRequiredBodySlot(\Equipment\slotType::$Hand)
             ->getEquipment();
     }
 
