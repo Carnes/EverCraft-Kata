@@ -1,3 +1,5 @@
+//https://github.com/PuttingTheDnDInTDD/EverCraft-Kata
+
 window.EverCraft = window.EverCraft || {};
 window.EverCraft.Enums = window.EverCraft.Enums || {};
 
@@ -155,11 +157,73 @@ describe("EverCraft", function() {
                 //Act
                 attacker.attack(defender);
                 attacker.attack(defender);
+                expect(defender.isDead()).toBe(false);
                 attacker.attack(defender);
 
                 //Assert
                 expect(defender.hitPoints()).toBe(-1);
                 expect(defender.isDead()).toBe(true);
+            });
+        });
+
+        describe('Character has abilities', function(){
+            it('has core abilities', function(){
+                var c = new ns.Character();
+
+                expect(ko.isObservable(c.strength)).toBe(true);
+                expect(ko.isObservable(c.dexterity)).toBe(true);
+                expect(ko.isObservable(c.constitution)).toBe(true);
+                expect(ko.isObservable(c.wisdom)).toBe(true);
+                expect(ko.isObservable(c.intelligence)).toBe(true);
+                expect(ko.isObservable(c.charisma)).toBe(true);
+            });
+
+            it('defaults to 10', function(){
+                var c = new ns.Character();
+
+                expect(c.strength()).toEqual(10);
+                expect(c.dexterity()).toEqual(10);
+                expect(c.constitution()).toEqual(10);
+                expect(c.wisdom()).toEqual(10);
+                expect(c.intelligence()).toEqual(10);
+                expect(c.charisma()).toEqual(10);
+            });
+
+            it('has modifiers to core abilities', function(){
+                var c = new ns.Character();
+
+                expect(ko.isObservable(c.strengthModifier)).toBe(true);
+                expect(ko.isObservable(c.dexterityModifier)).toBe(true);
+                expect(ko.isObservable(c.constitutionModifier)).toBe(true);
+                expect(ko.isObservable(c.wisdomModifier)).toBe(true);
+                expect(ko.isObservable(c.intelligenceModifier)).toBe(true);
+                expect(ko.isObservable(c.charismaModifier)).toBe(true);
+            });
+
+            it('changes ability modifier based on ability', function(){
+                var c = new ns.Character();
+                var abilityChart = [null,-5,-4,-4,-3,-3,-2,-2,-1,-1,0,0,1,1,2,2,3,3,4,4,5];
+
+                for(var i=1; i<=20; i++)
+                {
+                    c.strength(i);
+                    c.dexterity(i);
+                    c.constitution(i);
+                    c.wisdom(i);
+                    c.intelligence(i);
+                    c.charisma(i);
+                    var expectedAbilityModifier = abilityChart[i];
+                    expect(c.strengthModifier()).toEqual(expectedAbilityModifier);
+                    expect(c.dexterityModifier()).toEqual(expectedAbilityModifier);
+                    expect(c.constitutionModifier()).toEqual(expectedAbilityModifier);
+                    expect(c.wisdomModifier()).toEqual(expectedAbilityModifier);
+                    expect(c.intelligenceModifier()).toEqual(expectedAbilityModifier);
+                    expect(c.charismaModifier()).toEqual(expectedAbilityModifier);
+                }
+            });
+
+            it('adds strengthModifier to attack', function(){
+                
             });
         });
     });
