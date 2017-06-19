@@ -54,12 +54,16 @@ window.EverCraft = window.EverCraft || {};
 
         self.attack = function (defender) {
             var attackRoll = Random.d20();
-            if (attackRoll < defender.armorClass())
+            if (attackRoll + self.strengthModifier() < defender.armorClass())
                 return false;
 
+            //var baseDamage = 1;
+            var bonusDamage = self.strengthModifier();
             var dmg = 1;
             if (attackRoll == 20)
-                dmg = dmg * 2;
+                dmg += 1 + (bonusDamage * 2);
+            else
+                dmg += bonusDamage;
 
             defender.takeDamage(dmg);
             return true;

@@ -223,8 +223,49 @@ describe("EverCraft", function() {
             });
 
             it('adds strengthModifier to attack', function(){
-                
+                var attacker = new ns.Character();
+                var defender = new ns.Character();
+                spyOn(Random, 'int').andCallFake(function(){return defender.armorClass() - 1;});
+
+                attacker.strength(10);
+                expect(attacker.strengthModifier()).toEqual(0);
+                expect(attacker.attack(defender)).toBe(false);
+
+                attacker.strength(12);
+                expect(attacker.strengthModifier()).toEqual(1);
+                expect(attacker.attack(defender)).toBe(true);
             });
+
+            it('adds strengthModifier to damage', function(){
+                var attacker = new ns.Character();
+                var defender = new ns.Character();
+                var startingHitPoints = defender.hitPoints();
+                spyOn(Random, 'int').andCallFake(function(){return defender.armorClass();});
+
+                attacker.strength(10);
+                expect(attacker.strengthModifier()).toEqual(0);
+                expect(attacker.attack(defender)).toBe(true);
+                expect(defender.hitPoints()).toBe(startingHitPoints - 1);
+
+                defender.hitPoints(startingHitPoints);
+                attacker.strength(12);
+                expect(attacker.strengthModifier()).toEqual(1);
+                expect(attacker.attack(defender)).toBe(true);
+                expect(defender.hitPoints()).toBe(startingHitPoints - 2);
+            });
+
+            it('adds double strengthModifier to damage on crit', function(){
+                var attacker = new ns.Character();
+                var defender = new ns.Character();
+                var startingHitPoints = defender.hitPoints();
+                spyOn(Random, 'int').andCallFake(function(){return 20;});
+
+                attacker.strength(14);
+                expect(attacker.strengthModifier()).toEqual(2);
+                expect(attacker.attack(defender)).toBe(true);
+                expect(defender.hitPoints()).toBe(startingHitPoints - 1 - (2*attacker.strengthModifier()));
+            });
+
         });
     });
 
