@@ -2,11 +2,14 @@ window.EverCraft = window.EverCraft || {};
 (function (ns) {
     ns.Character = function () {
         var self = this;
+        var _ = {};
+
+        _.baseArmorClass = ko.observable(10);
+        _.baseHitPoints = ko.observable(5);
+        _.damage = ko.observable(0);
 
         self.name = ko.observable();
         self.alignment = ko.observable();
-        self.armorClass = ko.observable(10);
-        self.hitPoints = ko.observable(5);
 
         self.strength = ko.observable(10);
         self.dexterity = ko.observable(10);
@@ -14,6 +17,17 @@ window.EverCraft = window.EverCraft || {};
         self.wisdom = ko.observable(10);
         self.intelligence = ko.observable(10);
         self.charisma = ko.observable(10);
+        self.experience = ko.observable(0);
+
+        self.level = ko.computed({
+            read: function () {
+                var xp = self.experience();
+                return Math.floor(xp / 1000) + 1;
+            },
+            write: function () {
+                throw "Cannot set level directly.  Change character experience.";
+            }
+        })
 
         self.strengthModifier = ko.computed({
             read: function () {
@@ -51,14 +65,49 @@ window.EverCraft = window.EverCraft || {};
                 return ns.Enums.AbilityChart[cha];
             }
         });
+        self.armorClass = ko.computed({
+            read: function () {
+                var baseArmorClass = _.baseArmorClass();
+                var dexModifier = self.dexterityModifier();
+                return baseArmorClass + dexModifier;
+            },
+            write: function (v) {
+                throw "You can't directly alter armorClass.";
+            }
+        });
+        self.hitPoints = ko.computed({
+            read: function () {
+                var baseHP = _.baseHitPoints();
+                var conModifier = self.constitutionModifier();
+                var dmg = _.damage();
+                var level = self.level();
+                var hp = baseHP + conModifier;
+                if (hp < 1) hp = 1;
+                var hp = hp * level;
+                return hp - dmg;
+            },
+            write: function (v) {
+                throw "You can't directly alter hitPoints.  Use gainHitPoints or takeDamage instead.";
+            }
+        });
+
+        self.gainHitPoints = function (hp) {
+            var dmg = _.damage();
+            dmg -= hp;
+            if (dmg < 0) dmg = 0;
+            _.damage(dmg);
+        };
 
         self.attack = function (defender) {
             var attackRoll = Random.d20();
-            if (attackRoll + self.strengthModifier() < defender.armorClass())
+            var strModifier = self.strengthModifier();
+            var level = self.level();
+            var levelBonus = Math.floor(level / 2);
+            if (attackRoll + strModifier + levelBonus < defender.armorClass())
                 return false;
 
             //var baseDamage = 1;
-            var bonusDamage = self.strengthModifier();
+            var bonusDamage = strModifier;
             var dmg = 1;
             if (attackRoll == 20)
                 dmg += 1 + (bonusDamage * 2);
@@ -66,12 +115,13 @@ window.EverCraft = window.EverCraft || {};
                 dmg += bonusDamage;
 
             defender.takeDamage(dmg);
+            self.experience(self.experience() + 10);
             return true;
         };
 
-        self.takeDamage = function (amount) {
-            var hp = self.hitPoints() - amount;
-            self.hitPoints(hp);
+        self.takeDamage = function (newDmg) {
+            var oldDmg = _.damage();
+            _.damage(oldDmg + newDmg);
         };
 
         self.isDead = ko.computed({

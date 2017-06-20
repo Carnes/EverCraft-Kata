@@ -129,7 +129,7 @@ describe("EverCraft", function() {
                 expect(defender.hitPoints()).toBe(5);
 
                 //Act
-                var result = attacker.attack(defender);
+                attacker.attack(defender);
 
                 //Assert
                 expect(defender.hitPoints()).toBe(4);
@@ -142,7 +142,7 @@ describe("EverCraft", function() {
                 spyOn(Random, 'int').andCallFake(function(){return 20;});
 
                 //Act
-                var result = attacker.attack(defender);
+                attacker.attack(defender);
 
                 //Assert
                 expect(defender.hitPoints()).toBe(3);
@@ -247,7 +247,7 @@ describe("EverCraft", function() {
                 expect(attacker.attack(defender)).toBe(true);
                 expect(defender.hitPoints()).toBe(startingHitPoints - 1);
 
-                defender.hitPoints(startingHitPoints);
+                defender.gainHitPoints(startingHitPoints);
                 attacker.strength(12);
                 expect(attacker.strengthModifier()).toEqual(1);
                 expect(attacker.attack(defender)).toBe(true);
@@ -263,9 +263,109 @@ describe("EverCraft", function() {
                 attacker.strength(14);
                 expect(attacker.strengthModifier()).toEqual(2);
                 expect(attacker.attack(defender)).toBe(true);
-                expect(defender.hitPoints()).toBe(startingHitPoints - 1 - (2*attacker.strengthModifier()));
+                expect(defender.hitPoints()).toBe(startingHitPoints - 2 - (2*attacker.strengthModifier()));
             });
 
+            it('adds DEX modifier to armor class', function(){
+                //Arrange
+                var attacker = new ns.Character();
+                var defender = new ns.Character();
+                spyOn(Random, 'int').andCallFake(function(){return 10;});
+
+                //Act
+                var dex10Result = attacker.attack(defender);
+                defender.dexterity(12);
+                var dex12Result = attacker.attack(defender);
+
+                //Assert
+                expect(dex10Result).toEqual(true);
+                expect(dex12Result).toEqual(false);
+            });
+
+            it('adds constitution modifier to HP', function(){
+                //Arrange
+                var c = new ns.Character();
+                var initialHP = c.hitPoints();
+
+                //Act
+                c.constitution(12);
+
+                //Assert
+                expect(c.hitPoints()).toEqual(initialHP + 1);
+            });
+
+            it("constitution modifier that brings HP below 1 will be 1", function(){
+                var c = new ns.Character();
+                c.constitution(1);
+                expect(c.hitPoints()).toEqual(1);
+            });
+        });
+
+        describe('Experience', function(){
+            it('gain 10 xp on successful attack', function(){
+                //Arrange
+                var attacker = new ns.Character();
+                var defender = new ns.Character();
+                var attackerXPBefore = attacker.experience();
+                spyOn(Random, 'int').andCallFake(function(){return 10;});
+
+                //Act
+                attacker.attack(defender);
+                var attackerXPAfter = attacker.experience();
+
+                //Assert
+                expect(attackerXPBefore).toEqual(0);
+                expect(attackerXPAfter).toEqual(attackerXPBefore + 10);
+            });
+
+            it('starts at level 1', function(){
+                var c = new ns.Character();
+                expect(c.level()).toEqual(1);
+            });
+
+            it('gains a level after each 1000 experience', function(){
+                var c = new ns.Character();
+                for(var level=1; level<6; level++)
+                {
+                    c.experience((level * 1000)-1000);
+                    expect(c.level()).toEqual(level);
+                }
+            });
+
+            it('for each level hitPoints increase by 5 plus constitution modifier', function(){
+                var c = new ns.Character();
+                c.constitution(12);
+                var constitutionModifier = c.constitutionModifier();
+                for(var level=1; level<6; level++)
+                {
+                    c.experience((level * 1000)-1000);
+                    expect(c.hitPoints()).toEqual(level * (5 + constitutionModifier));
+                }
+            });
+
+            it('adds one to attack for each even level', function() {
+                //Arrange
+                var attacker = new ns.Character();
+                var defender = new ns.Character();
+                var level = 2;
+                var dieRoll = 10;
+                spyOn(Random, 'int').andCallFake(function () {return dieRoll;});
+
+                //Act / Assert
+                for (level = 2; level < 10; level += 2) {
+                    attacker.experience((level * 1000) - 1000);
+                    dieRoll = defender.armorClass() - Math.floor(level / 2);
+                    var result = attacker.attack(defender);
+                    expect(result).toEqual(true);
+                }
+                for (level = 2; level < 10; level += 2) {
+                    attacker.experience((level * 1000) - 1000);
+                    dieRoll = defender.armorClass() - Math.floor(level / 2) - 1;
+                    var result = attacker.attack(defender);
+                    expect(result).toEqual(false);
+                }
+
+            });
         });
     });
 
