@@ -5,11 +5,12 @@ window.EverCraft = window.EverCraft || {};
         var _ = {};
 
         _.baseArmorClass = ko.observable(10);
-        _.baseHitPoints = ko.observable(5);
         _.damage = ko.observable(0);
 
         self.name = ko.observable();
         self.alignment = ko.observable();
+
+        self.class = ko.observable(new ns.Classes.Default());
 
         self.strength = ko.observable(10);
         self.dexterity = ko.observable(10);
@@ -18,6 +19,14 @@ window.EverCraft = window.EverCraft || {};
         self.intelligence = ko.observable(10);
         self.charisma = ko.observable(10);
         self.experience = ko.observable(0);
+
+        _.baseHitPoints = ko.computed({
+            read:function(){
+                var c = self.class();
+                return c.hitPointsPerLevel;
+            }
+        });
+
 
         self.level = ko.computed({
             read: function () {
