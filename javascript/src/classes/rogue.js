@@ -1,12 +1,11 @@
 window.EverCraft = window.EverCraft || {};
 window.EverCraft.Classes = window.EverCraft.Classes || {};
 (function(ns){
-    ns.Fighter = function(){
+    ns.Rogue = function(){
         var self = new ns.Default();
 
-        self.hitPointsPerLevel = 10;
-        self.getAttackBonusPerLevel = function(attacker, defender){
-            return attacker.level();
+        self.getCriticalDamage = function(attacker, defender){
+            return (1 + attacker.strengthModifier()) * 3;
         };
 
         return self;

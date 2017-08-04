@@ -110,18 +110,18 @@ window.EverCraft = window.EverCraft || {};
         self.attack = function (defender) {
             var attackRoll = Random.d20();
             var strModifier = self.strengthModifier();
-            var level = self.level();
-            var levelBonus = Math.floor(level / 2);
-            if (attackRoll + strModifier + levelBonus < defender.armorClass())
+            var attackBonus = self.class().getAttackBonusPerLevel(self, defender);
+            if (attackRoll + strModifier + attackBonus < defender.armorClass())
                 return false;
 
-            //var baseDamage = 1;
-            var bonusDamage = strModifier;
-            var dmg = 1;
+            var criticalDamage = self.class().getCriticalDamage(self, defender);
+            var dmg = 0;
             if (attackRoll == 20)
-                dmg += 1 + (bonusDamage * 2);
+                dmg = criticalDamage;
             else
-                dmg += bonusDamage;
+                dmg = 1 + strModifier;
+
+            if(dmg < 1) dmg = 1;
 
             defender.takeDamage(dmg);
             self.experience(self.experience() + 10);

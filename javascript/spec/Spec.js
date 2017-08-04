@@ -393,6 +393,41 @@ describe("EverCraft", function() {
                 }
             });
 
+            it('adds one to attack for every level', function() {
+                //Arrange
+                var attacker = new ns.Character();
+                attacker.class(new ns.Classes.Fighter());
+                var defender = new ns.Character();
+                var attackerLevel = 2;
+                var dieRoll = 10;
+                spyOn(Random, 'int').andCallFake(function () {return dieRoll;});
+
+                //Act / Assert
+                for (attackerLevel = 2; attackerLevel < 10; attackerLevel ++) {
+                    attacker.experience((attackerLevel * 1000) - 1000);
+                    dieRoll = defender.armorClass() - (attackerLevel - 1) + 1;
+                    var result = attacker.attack(defender);
+                    expect(result).toEqual(true);
+                }
+            });
+        });
+
+        describe('Rogue class', function(){
+            it('does triple damage on critical hits', function(){
+               //Arrange
+                var attacker = new ns.Character();
+                attacker.class(new ns.Classes.Rogue())
+                var defender = new ns.Character();
+                spyOn(Random, 'int').andCallFake(function(){return 20;});
+                var critDamage = 3;
+                var startingHP = defender.hitPoints();
+
+                //Act
+                attacker.attack(defender);
+
+                //Assert
+                expect(defender.hitPoints()).toBe((startingHP - critDamage));
+            });
         });
     });
 
