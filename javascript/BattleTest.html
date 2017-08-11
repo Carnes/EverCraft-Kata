@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Battle Test</title>
+
+    <script type="text/javascript" src="lib/knockout-3.4.2.debug.js"></script>
+
+    <script type="text/javascript" src="src/character.js"></script>
+    <script type="text/javascript" src="src/random.js"></script>
+    <script type="text/javascript" src="src/enums/alignment.js"></script>
+    <script type="text/javascript" src="src/enums/abilityChart.js"></script>
+    <script type="text/javascript" src="src/classes/default.js"></script>
+    <script type="text/javascript" src="src/classes/fighter.js"></script>
+    <script type="text/javascript" src="src/classes/rogue.js"></script>
+</head>
+<body>
+
+<style>
+    label{
+        font-weight: bold;
+        padding-right: 10px;
+        width: 100px;
+        display: inline-block;
+    }
+    ul{
+        list-style-type: none;
+        padding:0px;
+    }
+
+    .characterBlock{
+        border-color: black;
+        border-width: thin;
+        border-style: solid;
+        padding: 5px;
+        margin: 5px;
+        min-width: 300px;
+        float:left;
+    }
+
+    .clear{
+        clear: both;
+    }
+</style>
+
+<script type="text/html" id="myTemplate">
+    <ul>
+        <li>
+            <label>Name</label>
+            <span data-bind="text: name"></span>
+        </li>
+        <li>
+            <label>Hit points</label>
+            <span data-bind="text: hitPoints"></span>
+        </li>
+        <li>
+            <label>Level</label>
+            <span data-bind="text: level"></span>
+        </li>
+        <li>
+            <label>Strength</label>
+            <span data-bind="text: strength"></span>
+        </li>
+        <li>
+            <label>Dexterity</label>
+            <span data-bind="text: dexterity"></span>
+        </li>
+        <li>
+            <label>Constitution</label>
+            <span data-bind="text: constitution"></span>
+        </li>
+    </ul>
+</script>
+
+
+<div id="battleViewer">
+    <h2>Battle Test</h2>
+    <div>
+        <div class="characterBlock" data-bind="template: { name: 'myTemplate', data: leftCharacter }"></div>
+        <div class="characterBlock" data-bind="template: { name: 'myTemplate', data: rightCharacter }"></div>
+    </div>
+    <div class="clear"></div>
+    <input type="button" value="Battle" data-bind="click: battle">
+
+    <div id="battleLog">
+        <div data-bind="foreach: battleLog">
+            <p data-bind="text: $data"></p>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    ((function(){
+        var PageController = function() {
+            var self = this;
+
+            var nameParts = [
+                "Mc", "ay", "co", "ce", "oc",
+                "O'", "er", "in", "se", "ba",
+                "pe", "te", "ma", "na", "ne",
+                "en", "le", "la", "el", "re",
+                "tte", "tto", "nne", "nno", "nna",
+                "we", "ew", "ey", "bay", "ber",
+                "xe", "xi", "pie", "pay", "jay",
+                "ab", "ar", "an", "as", "ap",
+                "re", "th", "mn", "me", "mi",
+                "ka", "ke", "ki", "ko", "ku"
+            ];
+
+            var toUpperCaseFirstLetter = function (string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            };
+
+            var generateRandomName = function () {
+                var name = '';
+                var numberOfNameParts = Random.int(3) + 2;
+                var namePartsLength = nameParts.length;
+                for (var i = 0; i < numberOfNameParts; i++)
+                    name += nameParts[Random.int(namePartsLength) - 1];
+                return toUpperCaseFirstLetter(name);
+            };
+
+            var generateRandomStat = function () {
+                var highestRoll = 0;
+                for (var i = 0; i < 3; i++) {
+                    var roll = Random.d20();
+                    if (roll > highestRoll)
+                        highestRoll = roll;
+                }
+                return highestRoll;
+            };
+
+            var generateRandomCharacter = function () {
+                var c = new EverCraft.Character();
+                c.name(generateRandomName());
+                c.strength(generateRandomStat());
+                c.dexterity(generateRandomStat());
+                c.constitution(generateRandomStat());
+                c.wisdom(generateRandomStat());
+                c.intelligence(generateRandomStat());
+                c.charisma(generateRandomStat());
+                c.experience((Random.int(5) + 2) * 500); //Wide experience gap
+                //Terrible class selector
+                if (c.dexterityModifier() > c.strengthModifier()) //Fast? then rogue
+                    c.class(new EverCraft.Classes.Rogue());
+                else if (c.constitutionModifier() > c.strengthModifier()) //Tough? then fighter
+                    c.class(new EverCraft.Classes.Fighter());
+
+                return c;
+            };
+
+            self.leftCharacter = ko.observable(generateRandomCharacter());
+            self.rightCharacter = ko.observable(generateRandomCharacter());
+            self.battleLog = ko.observableArray([]);
+
+            self.battle = function () {
+                var turns = 10;
+                var char1 = self.leftCharacter();
+                var char2 = self.rightCharacter();
+
+                if (char1.isDead() || char2.isDead()) return;
+                char1.attack(char2);
+                if (char2.isDead()) return;
+                char2.attack(char1);
+            };
+
+            window.EverCraft.log = function (l) {
+                self.battleLog.unshift(l);
+            };
+        };
+
+        var controller = new PageController();
+        ko.applyBindings(controller, document.getElementById('battleViewer'));
+    })());
+</script>
+
+</body>
+</html>

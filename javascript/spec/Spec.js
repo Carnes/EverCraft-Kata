@@ -2,6 +2,7 @@
 
 window.EverCraft = window.EverCraft || {};
 window.EverCraft.Enums = window.EverCraft.Enums || {};
+window.EverCraft.log = function(){};
 
 describe("EverCraft", function() {
     var ns = window.EverCraft;
@@ -368,11 +369,63 @@ describe("EverCraft", function() {
                     }
                 });
             });
+
+            describe('Events', function(){
+                it('Creates event for attack miss', function(){
+                    //Arrange
+                    var logValue = null;
+                    var attacker = new ns.Character();
+                    var defender = new ns.Character();
+                    spyOn(Random, 'int').andCallFake(function(){return 1;});
+                    spyOn(EverCraft, 'log').andCallFake(function(v){ logValue = v; });
+
+                    //Act
+                    var result = attacker.attack(defender);
+
+                    //Assert
+                    expect(logValue).toBe(attacker.name()+' attacks ' +defender.name() + ' and misses.');
+                });
+
+                it('Creates event for attack hit', function(){
+                    //Arrange
+                    var logValue = null;
+                    var attacker = new ns.Character();
+                    var defender = new ns.Character();
+                    attacker.name('attacker');
+                    defender.name('defender');
+                    spyOn(Random, 'int').andCallFake(function(){return 19;});
+                    spyOn(EverCraft, 'log').andCallFake(function(v){ logValue = v; });
+
+                    //Act
+                    var result = attacker.attack(defender);
+
+                    //Assert
+                    expect(logValue).toBe(attacker.name()+' attacks ' +defender.name() + ' and deals 1 damage.');
+                });
+
+                it('Creates event for death', function(){
+                    //Arrange
+                    var logValue = null;
+                    var attacker = new ns.Character();
+                    var defender = new ns.Character();
+                    attacker.name('attacker');
+                    defender.name('defender');
+                    spyOn(Random, 'int').andCallFake(function(){return 19;});
+                    spyOn(EverCraft, 'log').andCallFake(function(v){ logValue = v; });
+
+                    //Act
+                    for (var i=0; i<5; i++)
+                        attacker.attack(defender);
+
+                    //Assert
+                    expect(logValue).toBe(defender.name() + ' has died.');
+                });
+            });
         });
     });
     describe('Iteration 2 - Classes', function(){
         describe('Default class', function(){
-            it('has 5 hitpoints per level', function(){
+            it('has 5 hitPoints per level', function(){
                 var c = new ns.Character();
                 for(var level=1; level<6; level++)
                 {

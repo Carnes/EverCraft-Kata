@@ -107,12 +107,22 @@ window.EverCraft = window.EverCraft || {};
             _.damage(dmg);
         };
 
+        var logAttackMiss = function(attacker, defender){
+            ns.log(attacker.name()+' attacks ' +defender.name() + ' and misses.');
+        };
+
+        var logAttackHit = function(attacker, defender, damage){
+            ns.log(attacker.name()+' attacks ' +defender.name() + ' and deals '+damage+' damage.');
+        };
+
         self.attack = function (defender) {
             var attackRoll = Random.d20();
             var strModifier = self.strengthModifier();
             var attackBonus = self.class().getAttackBonusPerLevel(self, defender);
-            if (attackRoll + strModifier + attackBonus < defender.armorClass())
+            if (attackRoll + strModifier + attackBonus < defender.armorClass()) {
+                logAttackMiss(self, defender);
                 return false;
+            }
 
             var criticalDamage = self.class().getCriticalDamage(self, defender);
             var dmg = 0;
@@ -123,6 +133,7 @@ window.EverCraft = window.EverCraft || {};
 
             if(dmg < 1) dmg = 1;
 
+            logAttackHit(self,defender,dmg);
             defender.takeDamage(dmg);
             self.experience(self.experience() + 10);
             return true;
@@ -133,9 +144,15 @@ window.EverCraft = window.EverCraft || {};
             _.damage(oldDmg + newDmg);
         };
 
+        var logIsDead = function(){
+            ns.log(self.name() + ' has died.');
+        };
+
         self.isDead = ko.computed({
             read: function () {
-                return self.hitPoints() <= 0;
+                var isDead = self.hitPoints() <= 0;
+                if(isDead) logIsDead();
+                return isDead;
             }
         });
     };
